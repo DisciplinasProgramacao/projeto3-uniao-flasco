@@ -4,13 +4,13 @@ Escreva um ou dois parágrafos resumindo o objetivo do seu projeto.
 
 ## Alunos integrantes da equipe
 
-Renato Matos Alves Penna
-Pedro Araújo Franco
-Henry Sven Ribeiro da Costa
-Maria Eduarda Gonçalves de Souza Ferreira
-Pedro Henrique Dias Camara
+* Renato Matos Alves Penna
+* Pedro Araújo Franco
+* Henry Sven Ribeiro da Costa
+* Maria Eduarda Gonçalves de Souza Ferreira
+* Pedro Henrique Dias Camara
 
 ## Professores responsáveis
 
-Cleiton Silva Tavares
+* Cleiton Silva Tavares
 
