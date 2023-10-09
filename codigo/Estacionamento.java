@@ -1,88 +1,158 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * Classe que representa um estacionamento.
+ */
 public class Estacionamento {
 
-    	private String nome;
-    	private List<Cliente> id = new ArrayList<>();
-    	private List<Vaga> vagas = new ArrayList<>();
-    	private int quantFileiras;
-    	private int vagasPorFileira;
+    private String nome;
+    private List<Cliente> clientes;
+    private List<Vaga> vagas;
+    private int quantFileiras;
+    private int vagasPorFileira;
+    private List<UsoDeVaga> usos;
 
-	/**
-     	* Constrói um estacionamento com nome, número de fileiras e vagas por fileira especificados.
-     	*
-     	* @param nome          O nome do estacionamento.
-     	* @param fileiras      Número de fileiras de vagas.
-     	* @param vagasPorFila  Número de vagas por fileira.
-     	*/
-	public Estacionamento(String nome, int fileiras, int vagasPorFila) {
-	this.nome = nome;
+    /**
+     * Construtor para criar uma instância de Estacionamento.
+     *
+     * @param nome          nome do estacionamento
+     * @param fileiras      número total de fileiras no estacionamento
+     * @param vagasPorFila  número de vagas por fileira
+     */
+    public Estacionamento(String nome, int fileiras, int vagasPorFila) {
+        this.nome = nome;
         this.quantFileiras = fileiras;
         this.vagasPorFileira = vagasPorFila;
+        this.clientes = new ArrayList<>();
+        this.usos = new ArrayList<>();
+        this.vagas = new ArrayList<>();
         gerarVagas();
-	}
+    }
 
-	/**
-     	* Adiciona um veículo ao cliente especificado por seu ID.
-     	*
-     	* @param veiculo  O veículo a ser adicionado.
-     	* @param idCli    O ID do cliente ao qual o veículo será adicionado.
-     	*/
-	 public void addVeiculo(Veiculo veiculo, String idCli) {
-        for (Cliente cliente : id) {
+    /**
+     * Método para gerar vagas no estacionamento.
+     */
+    private void gerarVagas() {
+        for (int i = 0; i < quantFileiras; i++) {
+            for (int j = 0; j < vagasPorFileira; j++) {
+                vagas.add(new Vaga(i, j));
+            }
+        }
+    }
+
+    /**
+     * Método para adicionar um veículo a um cliente.
+     *
+     * @param veiculo  veículo a ser adicionado
+     * @param idCli    identificação do cliente
+     */
+    public void addVeiculo(Veiculo veiculo, String idCli) {
+        for (Cliente cliente : clientes) {
             if (cliente.getId().equals(idCli)) {
                 cliente.addVeiculo(veiculo);
                 return;
             }
         }
-         // TODO: Adicionar tratamento caso cliente não seja encontrado.
+        System.out.println("Cliente não encontrado!");
     }
 
-	/**
-     	* Adiciona um cliente à lista de clientes do estacionamento.
-     	*
-     	* @param cliente  O cliente a ser adicionado.
-     	*/
-	public void addCliente(Cliente cliente) {
-	id.add(cliente);
-	}
+    /**
+     * Método para adicionar um cliente ao estacionamento.
+     *
+     * @param cliente  cliente a ser adicionado
+     */
+    public void addCliente(Cliente cliente) {
+        clientes.add(cliente);
+    }
 
-	/**
-     	* Gera vagas para o estacionamento com base nas fileiras e vagas por fileira especificadas.
-     	*/
-	private void gerarVagas() {
-	char fila = 'A';
-        for (int i = 0; i < quantFileiras; i++, fila++) {
-            for (int j = 1; j <= vagasPorFileira; j++) {
-                vagas.add(new Vaga(fila + String.format("%02d", j)));
+    /**
+     * Método para estacionar um veículo.
+     *
+     * @param placa  placa do veículo a ser estacionado
+     */
+    public void estacionar(String placa) {
+        for (Vaga vaga : vagas) {
+            if (vaga.estacionar()) {
+                usos.add(new UsoDeVaga(vaga, LocalDateTime.now(), null, 0.0));
+                return;
             }
-          }
-	}
+        }
+        System.out.println("Não há vagas disponíveis");
+    }
 
-	public void estacionar(String placa) {
-	// TODO: Implementar lógica.	
-	}
+    /**
+     * Método para registrar a saída de um veículo do estacionamento.
+     *
+     * @param placa  placa do veículo que está saindo
+     * @return       valor a ser pago
+     */
+    public double sair(String placa) {
+        for (UsoDeVaga uso : usos) {
+            if (uso.getVaga().getVeiculoEstacionado().equals(placa) && uso.getSaida() == null) {
+                uso.setSaida(LocalDateTime.now());
+                double valor = uso.valorPago();
+                uso.setValorPago(valor);
+                uso.getVaga().sair();
+                return valor;
+            }
+        }
+        return 0.0;
+    }
 
-	public double sair(String placa) {
-	// TODO: Implementar lógica.
-	}
+    /**
+     * Método para calcular o total arrecadado pelo estacionamento.
+     *
+     * @return  valor total arrecadado
+     */
+    public double totalArrecadado() {
+        return usos.stream().mapToDouble(UsoDeVaga::valorPago).sum();
+    }
 
-	public double totalArrecadado() {
-	// TODO: Implementar lógica.
-	}
+    /**
+     * Método para calcular o total arrecadado em um determinado mês.
+     *
+     * @param mes  mês desejado
+     * @return     valor total arrecadado no mês
+     */
+    public double arrecadadoNoMes(int mes) {
+        return usos.stream()
+                .filter(u -> u.getEntrada().getMonthValue() == mes)
+                .mapToDouble(UsoDeVaga::valorPago)
+                .sum();
+    }
 
-	public double arrecadacaoNoMes(int mes) {
-	// TODO: Implementar lógica.
-	}
+    /**
+     * Método para calcular o valor médio pago por uso do estacionamento.
+     *
+     * @return  valor médio por uso
+     */
+    public double valorMedioPorUso() {
+        return totalArrecadado() / usos.size();
+    }
 
-	public double valorMedioPorUso() {
-	// TODO: Implementar lógica.
-	}
+    /**
+     * Método para listar os 5 clientes que mais geraram receita em um determinado mês.
+     *
+     * @param mes  mês desejado
+     * @return      lista com o nome dos 5 principais clientes
+     */
+    public List<String> top5Clientes(int mes) {
+        Map<Cliente, Double> mapClientes = new HashMap<>();
 
-	public String top5Clientes(int mes) {
-	// TODO: Implementar lógica.
-	}
+        for (Cliente cliente : clientes) {
+            mapClientes.put(cliente, cliente.arrecadadoNoMes(mes));
+        }
+
+        return mapClientes.entrySet().stream()
+                .sorted(Map.Entry.<Cliente, Double>comparingByValue().reversed())
+                .limit(5)
+                .map(e -> e.getKey().getNome())
+                .collect(Collectors.toList());
+    }
+
 }
