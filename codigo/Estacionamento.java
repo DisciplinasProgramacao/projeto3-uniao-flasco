@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +9,9 @@ import java.util.stream.Collectors;
 /**
  * Classe que representa um estacionamento.
  */
-public class Estacionamento {
+public class Estacionamento implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String nome;
     private List<Cliente> clientes;

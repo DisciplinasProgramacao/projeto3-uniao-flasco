@@ -36,4 +36,5 @@ class ClienteTest {
         cliente.addVeiculo(veiculo2);
         assertEquals(0, cliente.totalDeUsos());
     }
+
 }
