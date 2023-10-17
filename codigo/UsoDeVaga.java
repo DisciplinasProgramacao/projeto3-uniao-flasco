@@ -75,6 +75,42 @@ public class UsoDeVaga implements Serializable {
 		return valor;
 	}
 
+    public Vaga getVaga() {
+        return vaga;
+    }
+
+    public void setVaga(Vaga vaga) {
+        this.vaga = vaga;
+    }
+
+    public LocalDateTime getEntrada() {
+        return entrada;
+    }
+
+    public void setEntrada(LocalDateTime entrada) {
+        this.entrada = entrada;
+    }
+
+    public LocalDateTime getSaida() {
+        return saida;
+    }
+
+    public void setSaida(LocalDateTime saida) {
+        this.saida = saida;
+    }
+
+    public double getValorPago() {
+        return valorPago;
+    }
+
+    public void setValorPago(double valorPago) {
+        this.valorPago = valorPago;
+    }
+
+    public List<ServicoAdicional> getServicosAdicionais() {
+        return servicosAdicionais;
+    }
+
 	/**
 	 * Enumeração que representa os diferentes serviços adicionais oferecidos no estacionamento.
 	 */
@@ -97,20 +133,10 @@ public class UsoDeVaga implements Serializable {
 			this.tempoMinimo = tempoMinimo;
 		}
 
-		/**
-		 * Método para obter o valor do serviço adicional.
-		 *
-		 * @return O valor do serviço.
-		 */
 		public double getValor() {
 			return valor;
 		}
 
-		/**
-		 * Método para obter o tempo mínimo requerido para o serviço.
-		 *
-		 * @return O tempo mínimo em minutos.
-		 */
 		public int getTempoMinimo() {
 			return tempoMinimo;
 		}
