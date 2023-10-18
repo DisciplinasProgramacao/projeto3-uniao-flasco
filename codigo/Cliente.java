@@ -67,10 +67,7 @@ public class Cliente implements Serializable {
      */
 	public double arrecadadoPorVeiculo(String placa) {
 		Veiculo veiculo = possuiVeiculo(placa);
-        if (veiculo != null) {
             return veiculo.getValorArrecadado();
-        }
-        return 0.0;
 	}
 
     /**
