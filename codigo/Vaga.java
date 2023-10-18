@@ -1,6 +1,6 @@
+import java.io.Serializable;
 
-
-public class Vaga {
+public class Vaga implements Serializable {
 
 	private String id;
 	private boolean disponivel;
@@ -22,9 +22,10 @@ public class Vaga {
 		this.disponivel = disponivel;
 	}
 
-	public Vaga(int fila, int numero) {
-		int valor = fila + numero;
-		setId("" + valor);
+	public Vaga(char fila, int numero) {
+		String numeroVaga = "" + fila + numero;
+		
+		setId(numeroVaga);
 	}
 
 	public boolean estacionar() {
