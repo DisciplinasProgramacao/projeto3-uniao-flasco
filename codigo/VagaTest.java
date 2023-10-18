@@ -1,8 +1,8 @@
 import java.beans.Transient;
 import static org.junit.Assert.*;
-
+import org.junit.jupiter.api.Test;
 import org.junit.Before;
-import org.junit.Test;
+
 import org.junit.jupiter.api.BeforeEach;
 
 public class VagaTest {
@@ -12,24 +12,23 @@ public class VagaTest {
     {
         char fila = 'A';
         int numero = 9;
-       vaga = new Vaga(fila,numero);
+        vaga = new Vaga(fila,numero);
+        vaga.setDisponivel(true);
     }
     @Test
     public void testEstacionar()
     {
-        vaga.setDisponivel(true);
         assertTrue(vaga.estacionar());
     }    
     @Test
     public void testSair()
     {
-        vaga.setDisponivel(false);
-        assertTrue(vaga.sair());
+        
+        assertFalse(vaga.sair());
     }
     @Test
     public void testDisponivel()
     {
-        vaga.setDisponivel(true);
         assertTrue(vaga.disponivel());
     }
 }
