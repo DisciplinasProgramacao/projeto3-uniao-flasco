@@ -10,7 +10,7 @@ public class VagaTest {
     @BeforeEach
     public void setup()
     {
-        int fila =3;
+        char fila = 'A';
         int numero = 9;
        vaga = new Vaga(fila,numero);
     }
