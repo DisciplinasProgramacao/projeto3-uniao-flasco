@@ -1,11 +1,13 @@
 
+import java.io.Serializable;
 
 public class Vaga implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
-    private static final long serialVersionUID = 1L;
-
-    private String id;
-    private boolean disponivel;
+	private String id;
+	private boolean disponivel;
+	
 
 	public String getId() {
 		return id;
@@ -23,9 +25,10 @@ public class Vaga implements Serializable {
 		this.disponivel = disponivel;
 	}
 
-	public Vaga(int fila, int numero) {
-		int valor = fila + numero;
-		setId("" + valor);
+	public Vaga(char fila, int numero) {
+		String numeroVaga = "" + fila + numero;
+		
+		setId(numeroVaga);
 	}
 
 	public boolean estacionar() {
