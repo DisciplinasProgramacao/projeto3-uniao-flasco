@@ -16,6 +16,11 @@ public class Vaga implements Serializable {
 		this.id = id;
 	}
 
+	/**
+     * Verifica se a vaga está disponível.
+     * 
+     * @return true se disponível, false caso contrário.
+     */
 	public boolean isDisponivel() {
 		return disponivel;
 	}
@@ -24,12 +29,23 @@ public class Vaga implements Serializable {
 		this.disponivel = disponivel;
 	}
 
+	/**
+     * Construtor que cria uma vaga com base na fila e número.
+     * 
+     * @param fila    Letra da fila onde a vaga está localizada.
+     * @param numero  Número da vaga na fila especificada.
+     */
 	public Vaga(char fila, int numero) {
 		String numeroVaga = "" + fila + numero;
 		
 		setId(numeroVaga);
 	}
 
+	/**
+     * Tenta estacionar um veículo na vaga.
+     * 
+     * @return true se o estacionamento foi bem-sucedido, false caso contrário.
+     */
 	public boolean estacionar() {
 		if(disponivel() == true)
 		{
@@ -38,6 +54,11 @@ public class Vaga implements Serializable {
 		else return false;
 	}
 
+	/**
+     * Tenta retirar um veículo da vaga.
+     * 
+     * @return true se a saída foi bem-sucedida, false caso contrário.
+     */
 	public boolean sair() {
 		if(disponivel()== true)
 		{
@@ -46,6 +67,11 @@ public class Vaga implements Serializable {
 		else return true;
 	}
 
+	/**
+     * Verifica se a vaga está disponível.
+     * 
+     * @return true se a vaga está disponível, false caso contrário.
+     */
 	public boolean disponivel() {
 		if(isDisponivel() == true)
 		{
