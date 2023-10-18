@@ -19,13 +19,13 @@ public class VeiculoTest {
     }
 
     public Vaga criavaga(){
-        Vaga vaga = new Vaga(1, 2);
+        Vaga vaga = new Vaga('A', 1);
         return vaga;
     }
 
     @Test
     public void testEstacionar() {
-        Vaga vaga = new Vaga(1, 2);
+        Vaga vaga = new Vaga('A', 1);
 
         veiculo.estacionar(vaga);
 
@@ -35,7 +35,7 @@ public class VeiculoTest {
 
     @Test
     public void testEstacionarComVagaIndisponivel() {
-        Vaga vaga = new Vaga(2, 3);
+        Vaga vaga = new Vaga('B', 1);
         vaga.setDisponivel(false);
 
         assertThrows(IllegalArgumentException.class, () -> veiculo.estacionar(vaga));
@@ -43,7 +43,7 @@ public class VeiculoTest {
 
     @Test
     public void testSair() {
-        Vaga vaga = new Vaga(1, 2);
+        Vaga vaga = new Vaga('A', 1);
         UsoDeVaga uso = new UsoDeVaga(vaga, LocalDateTime.now());
         usos.add(uso);
 
@@ -55,8 +55,8 @@ public class VeiculoTest {
 
     @Test
     public void testTotalArrecadado() {
-        Vaga vaga1 = new Vaga(1, 2);
-        Vaga vaga2 = new Vaga(2, 3);
+        Vaga vaga1 = new Vaga('A', 1);
+        Vaga vaga2 = new Vaga('B', 1);
         UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now());
         UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now());
         uso1.setValorPago(20.0);
@@ -70,8 +70,8 @@ public class VeiculoTest {
 
     @Test
     public void testArrecadadoNoMes() {
-        Vaga vaga1 = new Vaga(1, 2);
-        Vaga vaga2 = new Vaga(2, 3);
+        Vaga vaga1 = new Vaga('A', 1);
+        Vaga vaga2 = new Vaga('B', 1);
         UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now());
         UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now());
         uso1.setValorPago(20.0);
@@ -86,8 +86,8 @@ public class VeiculoTest {
 
     @Test
     public void testTotalDeUsos() {
-        Vaga vaga1 = new Vaga(1, 2);
-        Vaga vaga2 = new Vaga(2, 3);
+        Vaga vaga1 = new Vaga('A', 1);
+        Vaga vaga2 = new Vaga('B', 1);
         UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now());
         UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now());
         usos.add(uso1);
