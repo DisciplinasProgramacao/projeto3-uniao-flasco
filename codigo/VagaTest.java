@@ -1,34 +1,31 @@
-import java.beans.Transient;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.Before;
-
 import org.junit.jupiter.api.BeforeEach;
 
 public class VagaTest {
-   public static Vaga vaga;
+    
+    public static Vaga vaga;
+
     @BeforeEach
-    public void setup()
-    {
+    public void setup() {
         char fila = 'A';
         int numero = 9;
-        vaga = new Vaga(fila,numero);
-        vaga.setDisponivel(true);
+        vaga = new Vaga(fila, numero);
     }
+
     @Test
-    public void testEstacionar()
-    {
+    public void testEstacionar() {
         assertTrue(vaga.estacionar());
-    }    
-    @Test
-    public void testSair()
-    {
-        
-        assertFalse(vaga.sair());
     }
+
     @Test
-    public void testDisponivel()
-    {
-        assertTrue(vaga.disponivel());
+    public void testSair() {
+        vaga.estacionar();
+        assertTrue(vaga.sair());
+    }
+
+    @Test
+    public void testIsDisponivel() {
+        assertTrue(vaga.isDisponivel());
     }
 }
