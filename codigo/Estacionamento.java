@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Estacionamento implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -44,7 +45,7 @@ public class Estacionamento implements Serializable {
     }
 
     private void gerarVagas() {
-        for (int i = 0; i < quantFileiras; i++) {
+        for (char i = 'A'; i < 'A' + quantFileiras; i++) {
             for (int j = 0; j < vagasPorFileira; j++) {
                 vagas.add(new Vaga(i, j));
             }
@@ -68,8 +69,8 @@ public class Estacionamento implements Serializable {
 
     public void estacionar(String placa) {
         for (Vaga vaga : vagas) {
-            if (vaga.estacionar()) {
-                usos.add(new UsoDeVaga(vaga, LocalDateTime.now(), null, 0.0));
+            if (vaga.estacionar(placa)) {
+                usos.add(new UsoDeVaga(vaga, LocalDateTime.now()));
                 return;
             }
         }
@@ -106,7 +107,7 @@ public class Estacionamento implements Serializable {
 
     public List<String> top5Clientes(int mes) {
         Map<Cliente, Double> mapClientes = clientes.stream()
-                .collect(Collectors.toMap(c -> c, c -> c.arrecadadoNoMes(mes)));
+                .collect(Collectors.toMap(c -> c, c -> c.getValorArrecadadoNoMes(mes)));
 
         return mapClientes.entrySet().stream()
                 .sorted(Map.Entry.<Cliente, Double>comparingByValue().reversed())
