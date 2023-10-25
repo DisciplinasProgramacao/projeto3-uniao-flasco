@@ -72,7 +72,7 @@ public class Aplicacao {
                 break;
 
             case 4:
-                servicosAdicionais();
+                servicosAdicionais(scanner);
                 break;
 
             case 5:
