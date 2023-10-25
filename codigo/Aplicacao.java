@@ -1,6 +1,9 @@
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import javax.swing.JOptionPane;
 
@@ -72,13 +75,15 @@ public class Aplicacao {
                 break;
 
             case 4:
-                servicosAdicionais(scanner);
+                servicosAdicionais();
                 break;
 
             case 5:
-                gerarRelatorioDoCliente(scanner);
+                scanner.nextLine();
+                System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
+                String cliente = scanner.nextLine();
+                gerarRelatorio(cliente);
                 break;
-
 
             case 6:
                 scanner.nextLine();
@@ -115,7 +120,7 @@ public class Aplicacao {
             Cliente cliente = new Cliente(nome, id);
             clienteDAO.add(cliente);
             System.out.println("Cliente cadastrado com sucesso!");
-        } catch (NumberFormatException | IOException e) {
+        } catch (NumberFormatException e) {
             System.out.println("Erro ao cadastrar o cliente: " + e.getMessage());
         }
     }
@@ -165,78 +170,12 @@ public class Aplicacao {
         System.out.println("Não há vagas disponíveis.");
     }
 
-  // case 4: Escolher serviços adicionais
-    public static void servicosAdicionais(Scanner scanner) {
-        System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
-        String placa = scanner.nextLine();
-        Veiculo veiculoDesejado = null;
-
-        for (Veiculo veiculo : veiculos) {
-            if (placa.equals(veiculo.getPlaca())) {
-                veiculoDesejado = veiculo;
-                break;
-            }
-        }
-
-        if (veiculoDesejado == null) {
-            System.out.println("Veículo não encontrado.");
-            return;
-        }
-
-
+    // case 4: Escolher serviços adicionais
+    public static void servicosAdicionais() {
         System.out.println("Escolha os serviços desejados: ");
-        int index = 1;
-        for (UsoDeVaga.ServicoAdicional servico : UsoDeVaga.ServicoAdicional.values()) {
-            System.out.println(index + ". " + servico.name() + " - R$ " + servico.getValor() + " (Tempo mínimo: " + servico.getTempoMinimo() + " minutos)");
-            index++;
-        }
-
-        System.out.println("Digite o número do serviço desejado (ou 0 para voltar):");
-        int escolha = scanner.nextInt();
-        scanner.nextLine();
-
-        if (escolha > 0 && escolha <= UsoDeVaga.ServicoAdicional.values().length) {
-            UsoDeVaga.ServicoAdicional servicoEscolhido = UsoDeVaga.ServicoAdicional.values()[escolha - 1];
-
-              UsoDeVaga usoAtual = veiculoDesejado.getUsos().get(veiculoDesejado.getUsos().size() - 1);
-            long periodo = usoAtual.getEntrada().until(LocalDateTime.now(), ChronoUnit.MINUTES);
-
-              if (periodo < servicoEscolhido.getTempoMinimo()) {
-                System.out.println("Tempo de uso atual do veículo é insuficiente para este serviço.");
-                return;
-            }
-
-            usoAtual.adicionarServico(servicoEscolhido);
-            System.out.println("Serviço " + servicoEscolhido.name() + " adicionado com sucesso!");
-        } else if (escolha != 0) {
-            System.out.println("Opção inválida. Tente novamente.");
-        }
+        // Implemente a lógica para escolher serviços adicionais aqui
     }
 
-// case 5: Gerar relatório do cliente
-public static void gerarRelatorioDoCliente(Scanner scanner) {
-    System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
-    String nomeCliente = scanner.nextLine();
-
-    Cliente clienteProcurado = null;
-    for (Cliente cliente : getClientes()) {
-        if (nomeCliente.equals(cliente.getNome())) {
-            clienteProcurado = cliente;
-            break;
-        }
-    }
-
-    if (clienteProcurado == null) {
-        System.out.println("Cliente não encontrado.");
-        return;
-    }
-
-    System.out.println("Relatório do Cliente: " + clienteProcurado.getNome());
-    System.out.println("ID: " + clienteProcurado.getId());
-    System.out.println("Número de Veículos: " + clienteProcurado.getVeiculos().size());
-    System.out.println("Total de Usos dos Veículos: " + clienteProcurado.totalDeUsos());
-  }
-  
     // case 7: Gerar relatório de arrecadação
     public static void arrecadacao(Scanner scanner) {
         Veiculo carro;
@@ -250,6 +189,7 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
                 System.out.println("Escolha um relatório para ser gerado: ");
                 System.out.println("1- Gerar relatório de arrecadação no mês.");
                 System.out.println("2- Gerar relatório de arrecadação total.");
+                System.out.println("3- Gerar relatório do uso das vagas");
 
                 int escolha = scanner.nextInt();
 
@@ -266,6 +206,38 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
                         System.out.println("Total arrecadado: " + totalArrecadado);
                         break;
 
+                    case 3:
+                        System.out.print("Como o relatório deve ser ordenado?\n1- Ordem crescente de data \n 2- Ordem decrescente de valor");
+                        int opcaoOrdem = scanner.nextInt();
+
+                        switch(opcaoOrdem){
+                            case 1:
+                            //TO-DO: gerar relatório em ordem crescente de data
+                                for(int m = 1; m <= 12;m++){
+                                    for(int d= 1; d <= 31; d++){
+                                        for (UsoDeVaga usoDeVaga : carro.getUsos()) {
+                                            LocalDateTime time = usoDeVaga.getEntrada();
+                                            if(m==time.getMonthValue()&&d==time.getDayOfMonth()){
+                                                System.out.println("A vaga " + usoDeVaga.getVaga().getId() + "foi utilizada no dia " + d + "/" + m);
+                                            }}}}
+                                break;
+                            case 2:
+                            //TO-DO: gerar relatorio em ordem decrescente de valor
+                            for (UsoDeVaga usoDeVagaI : carro.getUsos()) {
+                                double menor = 0;
+                                String id = usoDeVagaI.getVaga().getId();
+                                for (UsoDeVaga usoDeVagaJ : carro.getUsos()) {
+                                    if(usoDeVagaJ.getValorPago()<menor){
+                                        menor = usoDeVagaJ.getValorPago();
+                                        id = usoDeVagaJ.getVaga().getId();
+
+                                    }
+                                System.out.println("A vaga" + id + "foi utilizada e custou" + menor);}}
+                                break;
+                            default:
+                                System.out.println("Opção inválida. Digite outra opção!");
+                                break;}
+                        break;
                     default:
                         System.out.println("Opção inválida. Digite outra opção!");
                         break;
