@@ -167,10 +167,52 @@ public class Aplicacao {
         System.out.println("Não há vagas disponíveis.");
     }
 
-    // case 4: Escolher serviços adicionais
-    public static void servicosAdicionais() {
+  // case 4: Escolher serviços adicionais
+    public static void servicosAdicionais(Scanner scanner) {
+        System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
+        String placa = scanner.nextLine();
+        Veiculo veiculoDesejado = null;
+
+        for (Veiculo veiculo : veiculos) {
+            if (placa.equals(veiculo.getPlaca())) {
+                veiculoDesejado = veiculo;
+                break;
+            }
+        }
+
+        if (veiculoDesejado == null) {
+            System.out.println("Veículo não encontrado.");
+            return;
+        }
+
+
         System.out.println("Escolha os serviços desejados: ");
-        // Implemente a lógica para escolher serviços adicionais aqui
+        int index = 1;
+        for (UsoDeVaga.ServicoAdicional servico : UsoDeVaga.ServicoAdicional.values()) {
+            System.out.println(index + ". " + servico.name() + " - R$ " + servico.getValor() + " (Tempo mínimo: " + servico.getTempoMinimo() + " minutos)");
+            index++;
+        }
+
+        System.out.println("Digite o número do serviço desejado (ou 0 para voltar):");
+        int escolha = scanner.nextInt();
+        scanner.nextLine();
+
+        if (escolha > 0 && escolha <= UsoDeVaga.ServicoAdicional.values().length) {
+            UsoDeVaga.ServicoAdicional servicoEscolhido = UsoDeVaga.ServicoAdicional.values()[escolha - 1];
+
+              UsoDeVaga usoAtual = veiculoDesejado.getUsos().get(veiculoDesejado.getUsos().size() - 1);
+            long periodo = usoAtual.getEntrada().until(LocalDateTime.now(), ChronoUnit.MINUTES);
+
+              if (periodo < servicoEscolhido.getTempoMinimo()) {
+                System.out.println("Tempo de uso atual do veículo é insuficiente para este serviço.");
+                return;
+            }
+
+            usoAtual.adicionarServico(servicoEscolhido);
+            System.out.println("Serviço " + servicoEscolhido.name() + " adicionado com sucesso!");
+        } else if (escolha != 0) {
+            System.out.println("Opção inválida. Tente novamente.");
+        }
     }
 
     // case 7: Gerar relatório de arrecadação
