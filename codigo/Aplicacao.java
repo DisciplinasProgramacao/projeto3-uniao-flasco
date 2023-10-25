@@ -76,11 +76,9 @@ public class Aplicacao {
                 break;
 
             case 5:
-                scanner.nextLine();
-                System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
-                String cliente = scanner.nextLine();
-                gerarRelatorio(cliente);
+                gerarRelatorioDoCliente(scanner);
                 break;
+
 
             case 6:
                 scanner.nextLine();
@@ -215,6 +213,30 @@ public class Aplicacao {
         }
     }
 
+// case 5: Gerar relatório do cliente
+public static void gerarRelatorioDoCliente(Scanner scanner) {
+    System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
+    String nomeCliente = scanner.nextLine();
+
+    Cliente clienteProcurado = null;
+    for (Cliente cliente : getClientes()) {
+        if (nomeCliente.equals(cliente.getNome())) {
+            clienteProcurado = cliente;
+            break;
+        }
+    }
+
+    if (clienteProcurado == null) {
+        System.out.println("Cliente não encontrado.");
+        return;
+    }
+
+    System.out.println("Relatório do Cliente: " + clienteProcurado.getNome());
+    System.out.println("ID: " + clienteProcurado.getId());
+    System.out.println("Número de Veículos: " + clienteProcurado.getVeiculos().size());
+    System.out.println("Total de Usos dos Veículos: " + clienteProcurado.totalDeUsos());
+  }
+  
     // case 7: Gerar relatório de arrecadação
     public static void arrecadacao(Scanner scanner) {
         Veiculo carro;
