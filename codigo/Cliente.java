@@ -10,6 +10,22 @@ public class Cliente implements Serializable {
 	private String id;
 	private List<Veiculo> veiculos;
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     /**
      * Constrói um novo cliente com um nome e um ID especificados.
      *
