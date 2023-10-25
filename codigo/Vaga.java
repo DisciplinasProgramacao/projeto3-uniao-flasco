@@ -6,6 +6,8 @@ public class Vaga implements Serializable {
 
     private String id;
     private boolean disponivel;
+    private String veiculoEstacionado;
+
 
     /**
      * Obtém o ID da vaga.
@@ -44,31 +46,30 @@ public class Vaga implements Serializable {
         this.disponivel = true; // Por padrão a vaga está disponível quando criada
     }
 
-    /**
-     * Tenta estacionar um veículo na vaga.
-     * 
-     * @return true se o estacionamento foi bem-sucedido, false caso contrário.
-     */
-    public boolean estacionar() {
+    public String getVeiculoEstacionado() {
+        return veiculoEstacionado;
+    }
+
+    public void setVeiculoEstacionado(String veiculoEstacionado) {
+        this.veiculoEstacionado = veiculoEstacionado;
+    }
+
+    public boolean estacionar(String placa) {
         if(isDisponivel()) {
             setDisponivel(false);
+            setVeiculoEstacionado(placa);
             return true;
         }
         return false;
     }
 
-    /**
-     * Tenta retirar um veículo da vaga.
-     * 
-     * @return true se a saída foi bem-sucedida, false caso contrário.
-     */
     public boolean sair() {
         if(!isDisponivel()) {
             setDisponivel(true);
+            setVeiculoEstacionado(null);
             return true;
         }
         return false;
     }
 
 }
-
