@@ -21,7 +21,13 @@ import java.util.Scanner;
                     // Cadastrar cliente
                     break;
                 case 2:
-                    // Adicionar novo veículo
+                     System.out.println("Digite a placa do veiculo que deseja adicionar.");
+                    String placaVeiculos = scanner.nextLine();
+                    Veiculo veiculo = new Veiculo(placaVeiculos);
+                    System.out.println("Digite o seu id de cliente.");
+                    int idClientes = scanner.nextInt();
+                    Estacionamento e = new Estacionamento();
+                    e.addVeiculo(veiculo,idClientes);
                     break;
                 case 3:
                     // Estacionar
