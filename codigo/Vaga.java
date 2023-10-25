@@ -1,24 +1,74 @@
+import java.io.Serializable;
 
+public class Vaga implements Serializable {
 
-public class Vaga {
+    private static final long serialVersionUID = 1L;
 
-	private String id;
-	private boolean disponivel;
+    private String id;
+    private boolean disponivel;
 
-	public Vaga(int fila, int numero) {
-		
-	}
+    /**
+     * Obtém o ID da vaga.
+     * 
+     * @return O ID da vaga.
+     */
+    public String getId() {
+        return id;
+    }
 
-	public boolean estacionar() {
-		
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public boolean sair() {
-		
-	}
+    /**
+     * Verifica se a vaga está disponível.
+     * 
+     * @return true se disponível, false caso contrário.
+     */
+    public boolean isDisponivel() {
+        return disponivel;
+    }
 
-	public boolean disponivel() {
-		
-	}
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
+    }
+
+    /**
+     * Construtor que cria uma vaga com base na fila e número.
+     * 
+     * @param fila    Letra da fila onde a vaga está localizada.
+     * @param numero  Número da vaga na fila especificada.
+     */
+    public Vaga(char fila, int numero) {
+        this.id = "" + fila + numero;
+        this.disponivel = true; // Por padrão a vaga está disponível quando criada
+    }
+
+    /**
+     * Tenta estacionar um veículo na vaga.
+     * 
+     * @return true se o estacionamento foi bem-sucedido, false caso contrário.
+     */
+    public boolean estacionar() {
+        if(isDisponivel()) {
+            setDisponivel(false);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Tenta retirar um veículo da vaga.
+     * 
+     * @return true se a saída foi bem-sucedida, false caso contrário.
+     */
+    public boolean sair() {
+        if(!isDisponivel()) {
+            setDisponivel(true);
+            return true;
+        }
+        return false;
+    }
 
 }
+

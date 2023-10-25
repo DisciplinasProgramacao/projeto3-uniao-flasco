@@ -4,11 +4,11 @@ Repositório destinado ao envio da tarefa 3 do Grupo União Flasco, da matéria 
 
 ## Alunos integrantes da equipe
 
-* Renato Matos Alves Penna
-* Pedro Araújo Franco
-* Henry Sven Ribeiro da Costa
-* Maria Eduarda Gonçalves de Souza Ferreira
-* Pedro Henrique Dias Camara
+* Renato Matos Alves Penna **_@RenatoMAP77_**
+* Pedro Araújo Franco **_@pedrofr1313_**
+* Henry Sven Ribeiro da Costa **_@HenrySven_**
+* Maria Eduarda Gonçalves de Souza Ferreira **_@mariaeduardagsf_**
+* Pedro Henrique Dias Camara **_@Pwyll38_**
 
 ## Professores responsáveis
 
