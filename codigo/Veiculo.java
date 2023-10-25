@@ -1,7 +1,7 @@
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 /**
  * A classe Veiculo representa um veículo com uma placa associada e um histórico
@@ -22,7 +22,9 @@ public class Veiculo implements Serializable {
      */
     public Veiculo(String placa) {
         setPlaca(placa);
+        this.usos = new ArrayList<>();
     }
+
 
     /**
      * Define o cliente proprietário do veículo.
