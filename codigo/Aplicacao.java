@@ -110,6 +110,7 @@ public class Aplicacao {
     // case 1: Cadastrar cliente
     public static void cadastrarCliente(ClienteDAO clienteDAO, Scanner scanner) {
         System.out.println("Informe o nome do cliente: ");
+        scanner.nextLine();
         String nome = scanner.nextLine();
         System.out.println("Informe o ID do cliente: ");
         String id = scanner.nextLine();
@@ -127,6 +128,7 @@ public class Aplicacao {
     public static void adicionarVeiculo(Estacionamento estacionamento, Scanner scanner) {
         try {
             System.out.println("Digite a placa do veículo que deseja adicionar.");
+            scanner.nextLine();
             String placaVeiculo = scanner.nextLine();
             for (Veiculo veiculo : veiculos) {
                 if (placaVeiculo.equals(veiculo.getPlaca())) {
@@ -142,6 +144,7 @@ public class Aplicacao {
             for (Cliente cliente : clientes) {
                 if (idCliente.equals(cliente.getId())) {
                     estacionamento.addVeiculo(veiculo, idCliente);
+                    System.out.println("Veículo adicionado com sucesso!");
                     break;
                 }
             }
