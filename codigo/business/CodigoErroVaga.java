@@ -1,19 +1,20 @@
-public enum CodigoVeiculo implements CodigoErro {
-    VEICULO_JA_EXISTE(301){
+package business;
+public enum CodigoErroVaga implements CodigoErro {
+    VAGA_NAO_FINALIZADA(401) {
         @Override
         public int getCodigo() {
             return 1;
         }
     };
+
     private final int numero;
 
-    private CodigoVeiculo(int numero){
+    private CodigoErroVaga(int numero) {
         this.numero = numero;
     }
-    
+
     @Override
-    public int getNumero(){
+    public int getNumero() {
         return numero;
     }
-    }
-    
+}

@@ -1,5 +1,9 @@
+package teste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import business.Cliente;
+import business.Veiculo;
 
 import static org.junit.jupiter.api.Assertions.*;
 

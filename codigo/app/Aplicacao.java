@@ -1,3 +1,4 @@
+package app;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,6 +7,18 @@ import java.time.temporal.ChronoUnit;
 
 
 import javax.swing.JOptionPane;
+
+import business.Cliente;
+import business.ClienteDAO;
+import business.CodigoVeiculo;
+import business.Estacionamento;
+import business.EstacionamentoDAO;
+import business.ExcecaoGeral;
+import business.UsoDeVaga;
+import business.Vaga;
+import business.Veiculo;
+import business.VeiculoDAO;
+import business.UsoDeVaga.ServicoAdicional;
 
 public class Aplicacao {
 

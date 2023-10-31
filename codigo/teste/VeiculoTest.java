@@ -1,5 +1,10 @@
+package teste;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import business.UsoDeVaga;
+import business.Vaga;
+import business.Veiculo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

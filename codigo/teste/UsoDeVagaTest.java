@@ -1,7 +1,12 @@
+package teste;
 import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
+
+import business.UsoDeVaga;
+import business.Vaga;
+import business.UsoDeVaga.ServicoAdicional;
 
 public class UsoDeVagaTest {
 

@@ -1,3 +1,4 @@
+package business;
 
 
 import java.io.File;
@@ -9,106 +10,104 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-public class VeiculoDAO implements DAO<Veiculo, String> {
+public class ClienteDAO implements DAO<Cliente, String> {
     private File file;
     private FileOutputStream fos;
     private ObjectOutputStream outputFile;
 
-    public VeiculoDAO(String filename) throws IOException {
+    public ClienteDAO(String filename) throws IOException {
         file = new File(filename);
-       
+        
         fos = new FileOutputStream(file, false);
         outputFile = new ObjectOutputStream(fos);
     }
 
-    public void add(Veiculo veiculo) {
+    public void add(Cliente cliente) {
         try {
-            outputFile.writeObject(veiculo);
+            outputFile.writeObject(cliente);
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar o veículo com placa '" + veiculo.getPlaca() + "' no disco!");
+            System.out.println("ERRO ao gravar o cliente com ID '" + cliente.getId() + "' no disco!");
             e.printStackTrace();
         }
     }
 
-    public Veiculo get(String placa) {
-        Veiculo veiculo = null;
+    public Cliente get(String id) {
+        Cliente cliente = null;
 
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
             while (fis.available() > 0) {
-                veiculo = (Veiculo) inputFile.readObject();
+                cliente = (Cliente) inputFile.readObject();
 
-                if (placa.equals(veiculo.getPlaca())) {
-                    return veiculo;
+                if (id.equals(cliente.getId())) {
+                    return cliente;
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao ler o veículo com placa '" + placa + "' do disco!");
+            System.out.println("ERRO ao ler o cliente com ID '" + id + "' do disco!");
             e.printStackTrace();
         }
         return null;
     }
 
-    public List<Veiculo> getAll() {
-        List<Veiculo> veiculos = new ArrayList<Veiculo>();
-        Veiculo veiculo = null;
+    public List<Cliente> getAll() {
+        List<Cliente> clientes = new ArrayList<Cliente>();
+        Cliente cliente = null;
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
             while (fis.available() > 0) {
-                veiculo = (Veiculo) inputFile.readObject();
-                veiculos.add(veiculo);
+                cliente = (Cliente) inputFile.readObject();
+                clientes.add(cliente);
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar veículo no disco!");
+            System.out.println("ERRO ao gravar cliente no disco!");
             e.printStackTrace();
         }
-        return veiculos;
+        return clientes;
     }
 
-    public void update(Veiculo veiculo) {
-        List<Veiculo> veiculos = getAll();
+    public void update(Cliente cliente) {
+        List<Cliente> clientes = getAll();
         int index = -1;
-        for (int i = 0; i < veiculos.size(); i++) {
-            if (veiculos.get(i).getPlaca().equals(veiculo.getPlaca())) {
+        for (int i = 0; i < clientes.size(); i++) {
+            if (clientes.get(i).getId().equals(cliente.getId())) {
                 index = i;
                 break;
             }
         }
 
         if (index != -1) {
-            veiculos.set(index, veiculo);
+            clientes.set(index, cliente);
         }
-        saveToFile(veiculos);
+        saveToFile(clientes);
     }
 
-    public void delete(Veiculo veiculo) {
-        List<Veiculo> veiculos = getAll();
+    public void delete(Cliente cliente) {
+        List<Cliente> clientes = getAll();
         int index = -1;
-        for (int i = 0; i < veiculos.size(); i++) {
-            if (veiculos.get(i).getPlaca().equals(veiculo.getPlaca())) {
+        for (int i = 0; i < clientes.size(); i++) {
+            if (clientes.get(i).getId().equals(cliente.getId())) {
                 index = i;
                 break;
             }
         }
 
         if (index != -1) {
-            veiculos.remove(index);
+            clientes.remove(index);
         }
-        saveToFile(veiculos);
+        saveToFile(clientes);
     }
 
-    public void saveToFile(List<Veiculo> veiculos) {
+    public void saveToFile(List<Cliente> clientes) {
         try {
             close();
             fos = new FileOutputStream(file, false);
             outputFile = new ObjectOutputStream(fos);
 
-            for (Veiculo veiculo : veiculos) {
-                outputFile.writeObject(veiculo);
+            for (Cliente cliente : clientes) {
+                outputFile.writeObject(cliente);
             }
             outputFile.flush();
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar veículo no disco!");
+            System.out.println("ERRO ao gravar cliente no disco!");
             e.printStackTrace();
         }
     }
