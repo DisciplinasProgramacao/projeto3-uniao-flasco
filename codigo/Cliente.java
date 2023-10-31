@@ -4,112 +4,144 @@ import java.util.List;
 
 public class Cliente implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String nome;
-	private String id;
-	private List<Veiculo> veiculos;
+    private String nome;
+    private String id;
+    private List<Veiculo> veiculos;
 
+    /**
+     * Retorna o nome do cliente.
+     *
+     * @return nome do cliente.
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * Define o nome do cliente.
+     *
+     * @param nome nome do cliente.
+     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    /**
+     * Retorna o ID do cliente.
+     *
+     * @return ID do cliente.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Define o ID do cliente.
+     *
+     * @param id ID do cliente.
+     */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Constrói um novo cliente com um nome e um ID especificados.
+     * Construtor que inicializa um cliente com nome e ID especificados.
      *
      * @param nome Nome do cliente.
      * @param id ID do cliente.
      */
-	public Cliente(String nome, String id) {
-		this.nome = nome;
+    public Cliente(String nome, String id) {
+        this.nome = nome;
         this.id = id;
         this.veiculos = new ArrayList<>();
-	}
+    }
 
     /**
      * Adiciona um veículo à lista de veículos do cliente.
      *
      * @param veiculo O veículo a ser adicionado.
      */
-	public void addVeiculo(Veiculo veiculo) {
-		veiculos.add(veiculo);
-	}
+    public void addVeiculo(Veiculo veiculo) {
+        veiculos.add(veiculo);
+    }
 
     /**
      * Verifica se o cliente possui um veículo com uma placa específica.
      *
-     * @param placa A placa do veículo a ser procurado.
-     * @return O veículo com a placa especificada ou null se não for encontrado.
+     * @param placa A placa do veículo a ser verificada.
+     * @return O veículo com a placa fornecida ou null se não for encontrado.
      */
-	public Veiculo possuiVeiculo(String placa) {
-		for(Veiculo veiculo : veiculos){
-			if (veiculo.getPlaca().equals(placa)){
-				return veiculo;
-			}
-		}
-		return null;
-	}
+    public Veiculo possuiVeiculo(String placa) {
+        for(Veiculo veiculo : veiculos){
+            if (veiculo.getPlaca().equals(placa)){
+                return veiculo;
+            }
+        }
+        return null;
+    }
 
     /**
-     * Calcula o total de usos de todos os veículos do cliente.
+     * Calcula o total de usos de todos os veículos associados ao cliente.
      *
-     * @return O total de usos.
+     * @return Total de usos.
      */
-	public int totalDeUsos() {
-		int totalUsos = 0;
+    public int getTotalUsos() {
+        int totalUsos = 0;
         for (Veiculo veiculo : veiculos) {
-            totalUsos += veiculo.getTotalUsos();
+            totalUsos += veiculo.totalDeUsos();
         }
         return totalUsos;
-	}
+    }
 
     /**
-     * Calcula o valor arrecadado por um veículo específico.
+     * Calcula o valor arrecadado por um veículo específico do cliente.
      *
      * @param placa A placa do veículo a ser consultado.
-     * @return O valor arrecadado pelo veículo ou 0.0 se o veículo não for encontrado.
+     * @return Valor arrecadado pelo veículo ou 0.0 se o veículo não for encontrado.
      */
-	public double arrecadadoPorVeiculo(String placa) {
-		Veiculo veiculo = possuiVeiculo(placa);
-            return veiculo.getValorArrecadado();
-	}
+    public double getValorArrecadado(String placa) {
+        Veiculo veiculo = possuiVeiculo(placa);
+        if (veiculo != null) {
+            return veiculo.totalArrecadado();
+        }
+        return 0.0;
+    }
 
     /**
-     * Calcula o total arrecadado por todos os veículos do cliente.
+     * Calcula o valor total arrecadado por todos os veículos do cliente.
      *
-     * @return O valor total arrecadado.
+     * @return Valor total arrecadado.
      */
-	public double arrecadadoTotal() {
-		double totalArrecadado = 0.0;
-		for (Veiculo veiculo : veiculos) {
-            totalArrecadado += veiculo.getValorArrecadado();
+    public double getValorArrecadado() {
+        double totalArrecadado = 0.0;
+        for (Veiculo veiculo : veiculos) {
+            totalArrecadado += veiculo.totalArrecadado();
         }
         return totalArrecadado;
-	}
+    }
 
     /**
      * Calcula o valor arrecadado por todos os veículos do cliente em um mês específico.
      *
      * @param mes O mês a ser consultado.
-     * @return O valor arrecadado no mês.
+     * @return Valor arrecadado no mês.
      */
-	public double arrecadadoNoMes(int mes) {
-		double arrecadadoMes = 0.0;
+    public double getValorArrecadadoNoMes(int mes) {
+        double arrecadadoMes = 0.0;
         for (Veiculo veiculo : veiculos) {
-            arrecadadoMes += veiculo.getValorArrecadadoNoMes(mes);
+            arrecadadoMes += veiculo.arrecadadoNoMes(mes);
         }
         return arrecadadoMes;
-	}
+    }
+
+    /**
+     * Retorna a lista de veículos associados ao cliente.
+     *
+     * @return Lista de veículos do cliente.
+     */
+    public List<Veiculo> getVeiculos() {
+        return veiculos;
+    }
 }

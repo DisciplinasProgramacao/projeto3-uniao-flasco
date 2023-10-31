@@ -1,6 +1,9 @@
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
+import java.time.temporal.ChronoUnit;
+
 
 import javax.swing.JOptionPane;
 
@@ -50,7 +53,7 @@ public class Aplicacao {
         System.out.println("3. Estacionar");
         System.out.println("4. Escolher serviços adicionais");
         System.out.println("5. Gerar relatório do cliente");
-        System.out.println("6. Gerar relatório do veículo");
+       // System.out.println("6. Gerar relatório do veículo");
         System.out.println("7. Gerar relatório de arrecadação");
         System.out.println("8. Sair/voltar");
 
@@ -80,12 +83,12 @@ public class Aplicacao {
                 break;
 
 
-            case 6:
-                scanner.nextLine();
-                System.out.println("Digite a placa do veículo que deseja gerar o relatório: ");
-                String placaVeiculos = scanner.nextLine();
-                gerarRelatorio(placaVeiculos);
-                break;
+           // case 6:
+             //   scanner.nextLine();
+               // System.out.println("Digite a placa do veículo que deseja gerar o relatório: ");
+               // String placaVeiculos = scanner.nextLine();
+               // gerarRelatorio(placaVeiculos);
+               // break;
 
             case 7:
                 arrecadacao(scanner);
@@ -107,6 +110,7 @@ public class Aplicacao {
     // case 1: Cadastrar cliente
     public static void cadastrarCliente(ClienteDAO clienteDAO, Scanner scanner) {
         System.out.println("Informe o nome do cliente: ");
+        scanner.nextLine();
         String nome = scanner.nextLine();
         System.out.println("Informe o ID do cliente: ");
         String id = scanner.nextLine();
@@ -115,7 +119,7 @@ public class Aplicacao {
             Cliente cliente = new Cliente(nome, id);
             clienteDAO.add(cliente);
             System.out.println("Cliente cadastrado com sucesso!");
-        } catch (NumberFormatException | IOException e) {
+        } catch (NumberFormatException e) {
             System.out.println("Erro ao cadastrar o cliente: " + e.getMessage());
         }
     }
@@ -124,6 +128,7 @@ public class Aplicacao {
     public static void adicionarVeiculo(Estacionamento estacionamento, Scanner scanner) {
         try {
             System.out.println("Digite a placa do veículo que deseja adicionar.");
+            scanner.nextLine();
             String placaVeiculo = scanner.nextLine();
             for (Veiculo veiculo : veiculos) {
                 if (placaVeiculo.equals(veiculo.getPlaca())) {
@@ -139,6 +144,7 @@ public class Aplicacao {
             for (Cliente cliente : clientes) {
                 if (idCliente.equals(cliente.getId())) {
                     estacionamento.addVeiculo(veiculo, idCliente);
+                    System.out.println("Veículo adicionado com sucesso!");
                     break;
                 }
             }
@@ -234,7 +240,7 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
     System.out.println("Relatório do Cliente: " + clienteProcurado.getNome());
     System.out.println("ID: " + clienteProcurado.getId());
     System.out.println("Número de Veículos: " + clienteProcurado.getVeiculos().size());
-    System.out.println("Total de Usos dos Veículos: " + clienteProcurado.totalDeUsos());
+    System.out.println("Total de Usos dos Veículos: " + clienteProcurado.getTotalUsos());
   }
   
     // case 7: Gerar relatório de arrecadação
