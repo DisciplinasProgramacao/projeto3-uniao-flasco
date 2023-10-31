@@ -14,7 +14,7 @@ import java.util.List;
 public class Veiculo implements Serializable {
     private String placa;
     private List<UsoDeVaga> usos;
-    private Cliente proprietario;
+   
 
     /**
      * Construtor da classe Veiculo. Inicializa uma instância de veículo com a placa fornecida.
