@@ -28,24 +28,6 @@ public class Veiculo implements Serializable {
 
 
     /**
-     * Define o cliente proprietário do veículo.
-     *
-     * @param proprietario O cliente proprietário do veículo.
-     */
-    public void setProprietario(Cliente proprietario) {
-        this.proprietario = proprietario;
-    }
-
-    /**
-     * Obtém o cliente proprietário do veículo.
-     *
-     * @return O cliente proprietário do veículo.
-     */
-    public Cliente getProprietario() {
-        return proprietario;
-    }
-
-    /**
      * Define a placa do veículo.
      *
      * @param placa A placa do veículo.
