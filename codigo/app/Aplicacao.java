@@ -56,7 +56,7 @@ public class Aplicacao {
     }
 
     public static void setEstacionamentos(List<Estacionamento> estacionamentos) {
-        Aplicacao.estacionamentos = estacionamentos;
+        this.estacionamentos = estacionamentos;
     }
 
     public static void menu(Scanner scanner, ClienteDAO DAOc, EstacionamentoDAO DAOe, VeiculoDAO DAOv) {
@@ -294,7 +294,7 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
     }
 
     public static void main(String[] args) throws IOException {
-        EstacionamentoDAO DAOe = new EstacionamentoDAO("Equipamento.dat");
+        EstacionamentoDAO DAOe = new EstacionamentoDAO("Estacionamento.dat");
         ClienteDAO DAOc = new ClienteDAO("Cliente.dat");
         VeiculoDAO DAOv = new VeiculoDAO("Veiculo.dat");
 
@@ -302,13 +302,21 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
         int escolhaEstacionamento = 0;
         Scanner scanner = new Scanner(System.in);
 
-        Estacionamento estacionamento1 = new Estacionamento("Renato Vagas", 30, 30, 1);
-        DAOe.add(estacionamento1);
-        Estacionamento estacionamento2 = new Estacionamento("Pedro Vagas", 30, 30, 2);
-        DAOe.add(estacionamento2);
-        Estacionamento estacionamento3 = new Estacionamento("Duda Vagas", 30, 30, 3);
-        DAOe.add(estacionamento3);
-
+        setEstacionamentos(DAOe.getAll()); 
+        if (getEstacionamentos() == null)
+        {
+            Estacionamento estacionamento1 = new Estacionamento("Renato Vagas", 30, 30, 1);
+            DAOe.add(estacionamento1);
+            Estacionamento estacionamento2 = new Estacionamento("Pedro Vagas", 30, 30, 2);
+            DAOe.add(estacionamento2);
+            Estacionamento estacionamento3 = new Estacionamento("Duda Vagas", 30, 30, 3);
+            DAOe.add(estacionamento3);
+            setEstacionamentos(DAOe.getAll()); 
+        }
+        List<Estacionamento> teste = getEstacionamentos();
+        for (Estacionamento estacionamento : teste) {
+            System.out.println(estacionamento.getNome() +"  -  " + estacionamento.getId());
+        }
         while (escolhaEstacionamento < 1 || escolhaEstacionamento > 3) {
             System.out.println("ESCOLHA O ESTACIONAMENTO");
             System.out.println("1 - Estacionamento 1");
