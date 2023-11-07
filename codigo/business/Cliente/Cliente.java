@@ -76,13 +76,13 @@ public class Cliente implements Serializable {
      * @param placa A placa do veículo a ser verificada.
      * @return O veículo com a placa fornecida ou null se não for encontrado.
      */
-    public Veiculo possuiVeiculo(String placa) {
+    public boolean possuiVeiculo(String placa) {
         for(Veiculo veiculo : veiculos){
             if (veiculo.getPlaca().equals(placa)){
-                return veiculo;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     /**

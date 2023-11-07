@@ -1,4 +1,5 @@
 package business.Estacionamento;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +23,19 @@ public class Estacionamento implements Serializable {
     private int vagasPorFileira;
     private List<UsoDeVaga> usos;
 
- public String getNome() {
+    public Estacionamento(String nome, int fileiras, int vagasPorFila, int id) {
+        this.nome = nome;
+        this.id = id;
+        this.quantFileiras = fileiras;
+        this.vagasPorFileira = vagasPorFila;
+        this.clientes = new ArrayList<>();
+        this.usos = new ArrayList<>();
+        this.vagas = new ArrayList<>();
+        gerarVagas();
+    }
+
+
+    public String getNome() {
         return nome;
     }
 
@@ -39,19 +52,8 @@ public class Estacionamento implements Serializable {
     }
 
 
-    public Estacionamento(String nome, int fileiras, int vagasPorFila, int id) {
-        this.nome = nome;
-        this.id = id;
-        this.quantFileiras = fileiras;
-        this.vagasPorFileira = vagasPorFila;
-        this.clientes = new ArrayList<>();
-        this.usos = new ArrayList<>();
-        this.vagas = new ArrayList<>();
-        gerarVagas();
-    }
-
     private void gerarVagas() {
-        for (char i = 'A'; i < 'A' + quantFileiras; i++) {
+        for (int i = 1; i <= quantFileiras; i++) {
             for (int j = 0; j < vagasPorFileira; j++) {
                 vagas.add(new Vaga(i, j));
             }
@@ -59,7 +61,7 @@ public class Estacionamento implements Serializable {
     }
 
     public void addVeiculo(Veiculo veiculo, String idCli) {
-        
+
         for (Cliente cliente : clientes) {
             if (cliente.getId().equals(idCli)) {
                 cliente.addVeiculo(veiculo);
@@ -70,7 +72,21 @@ public class Estacionamento implements Serializable {
     }
 
     public void addCliente(Cliente cliente) {
-        clientes.add(cliente);
+        if (cliente != null) {
+            clientes.add(cliente);
+        }
+    }
+
+    public void addAllClientes(List<Cliente> clientes) {
+        this.clientes.addAll(clientes);
+    }
+
+    public List<Cliente> getAllClientes() {
+        return clientes;
+    }
+
+    public void addAllVagas(List<Vaga> vagas) {
+        this.vagas.addAll(vagas);
     }
 
     public void estacionar(String placa) {
@@ -121,4 +137,17 @@ public class Estacionamento implements Serializable {
                 .map(e -> e.getKey().getNome())
                 .collect(Collectors.toList());
     }
+
+
+    public boolean VeiculoExiste(String placaVeiculo){
+        for (Cliente cliente : clientes) {
+            if (cliente.possuiVeiculo(placaVeiculo) == true) {
+                return true;
+            }
+        }
+        return false;
+        
+    }
 }
+
+

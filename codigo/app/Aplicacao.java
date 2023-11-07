@@ -1,6 +1,7 @@
 package app;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.time.temporal.ChronoUnit;
@@ -18,9 +19,9 @@ import business.Exceptions.*;
 
 public class Aplicacao {
 
-    private static List<Veiculo> veiculos;
-    private static List<Cliente> clientes;
-    private static List<Estacionamento> estacionamentos;
+   
+    
+    private static List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
     private static Estacionamento estacionamentoUsado;
 
     public static Estacionamento getEstacionamentoUsado() {
@@ -31,31 +32,23 @@ public class Aplicacao {
         Aplicacao.estacionamentoUsado = estacionamentoUsado;
     }
 
-    public static List<Veiculo> getVeiculos() {
-        return veiculos;
-    }
+    
+    
 
-    public static void setVeiculos(List<Veiculo> veiculos) {
-        Aplicacao.veiculos = veiculos;
-    }
-
-    public static List<Cliente> getClientes() {
-        return clientes;
-    }
-
-    public static void setClientes(List<Cliente> clientes) {
-        Aplicacao.clientes = clientes;
-    }
+  
 
     public static List<Estacionamento> getEstacionamentos() {
         return estacionamentos;
     }
 
     public static void setEstacionamentos(List<Estacionamento> estacionamentos) {
-        this.estacionamentos = estacionamentos;
+        estacionamentos.addAll( estacionamentos);
     }
 
-    public static void menu(Scanner scanner, ClienteDAO DAOc, EstacionamentoDAO DAOe, VeiculoDAO DAOv) {
+    public static void menu(Scanner scanner, EstacionamentoDAO DAOe) {
+        int opcaoMenuPrincipal=0; 
+        
+        do{
         System.out.println("\nMENU:");
         System.out.println("1. Cadastrar cliente");
         System.out.println("2. Adicionar novo veículo");
@@ -67,16 +60,16 @@ public class Aplicacao {
         System.out.println("8. Sair/voltar");
 
         System.out.print("Escolha uma opção: ");
-        int opcao = scanner.nextInt();
+        opcaoMenuPrincipal = scanner.nextInt();
 
        
-        switch (opcao) {
+        switch (opcaoMenuPrincipal) {
             case 1:
-                cadastrarCliente(DAOc, scanner);
+                cadastrarCliente( scanner);
                 break;
 
             case 2:
-                adicionarVeiculo(getEstacionamentoUsado(), scanner);
+                adicionarVeiculo( scanner);
                 break;
 
             case 3:
@@ -104,20 +97,19 @@ public class Aplicacao {
                 break;
 
             case 8:
-                System.out.println("Saindo do programa.");
-                DAOc.saveToFile(getClientes());
-                DAOv.saveToFile(veiculos);
-                DAOe.saveToFile(estacionamentos);
-
-                System.exit(0);
-
+            opcaoMenuPrincipal = 8;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
         }
+    }while(opcaoMenuPrincipal!=8);
+
+     System.out.println("Saindo do programa.");
+                DAOe.saveToFile(estacionamentos);
+                System.exit(0);
     }
 
     // case 1: Cadastrar cliente
-    public static void cadastrarCliente(ClienteDAO clienteDAO, Scanner scanner) {
+    public static void cadastrarCliente( Scanner scanner) {
         System.out.println("Informe o nome do cliente: ");
         scanner.nextLine();
         String nome = scanner.nextLine();
@@ -126,7 +118,11 @@ public class Aplicacao {
 
         try {
             Cliente cliente = new Cliente(nome, id);
-            clienteDAO.add(cliente);
+            for (Estacionamento estacionamento : estacionamentos) {
+                estacionamento.addCliente(cliente);
+                estacionamentoUsado.addCliente(cliente);
+            }
+
             System.out.println("Cliente cadastrado com sucesso!");
         } catch (NumberFormatException e) {
             System.out.println("Erro ao cadastrar o cliente: " + e.getMessage());
@@ -134,27 +130,37 @@ public class Aplicacao {
     }
 
     // case 2: Adicionar veículo
-    public static void adicionarVeiculo(Estacionamento estacionamento, Scanner scanner) {
+    public static void adicionarVeiculo( Scanner scanner) {
         try {
             System.out.println("Digite a placa do veículo que deseja adicionar.");
             scanner.nextLine();
             String placaVeiculo = scanner.nextLine();
-            for (Veiculo veiculo : veiculos) {
-                if (placaVeiculo.equals(veiculo.getPlaca())) {
-                    throw new ExcecaoGeral()
+            
+          if (estacionamentoUsado.VeiculoExiste(placaVeiculo)==true)
+                  {  throw new ExcecaoGeral()
                             .setCodigoErro(CodigoVeiculo.VEICULO_JA_EXISTE)
                             .set("nome", "data inicial")
                             .set("valor", "12/13/2015");
-                }
-            }
+                  }
+                
             Veiculo veiculo = new Veiculo(placaVeiculo);
             System.out.println("Digite o seu ID de cliente.");
             String idCliente = scanner.nextLine();
-            for (Cliente cliente : clientes) {
+            
+            List<Cliente> clientes = estacionamentoUsado.getAllClientes();
+            for (Cliente cliente : clientes ) {
                 if (idCliente.equals(cliente.getId())) {
-                    estacionamento.addVeiculo(veiculo, idCliente);
+                    for (Estacionamento e : estacionamentos) {
+                        if (e == estacionamentoUsado)
+                       { e.addVeiculo(veiculo, idCliente);
+                        estacionamentoUsado.addVeiculo(veiculo, idCliente);
+                        break;}
+                    }
                     System.out.println("Veículo adicionado com sucesso!");
                     break;
+                }
+                else{
+                    System.out.println("ID de cliente não cadastrado.");
                 }
             }
 
@@ -291,28 +297,25 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
 
     public static void main(String[] args) throws IOException {
         EstacionamentoDAO DAOe = new EstacionamentoDAO("Estacionamento.dat");
-        ClienteDAO DAOc = new ClienteDAO("Cliente.dat");
-        VeiculoDAO DAOv = new VeiculoDAO("Veiculo.dat");
-
+        setEstacionamentos(DAOe.getAll()); 
+        
         System.out.println("BEM-VINDO AO SISTEMA DE ESTACIONAMENTO\n");
         int escolhaEstacionamento = 0;
         Scanner scanner = new Scanner(System.in);
 
-        setEstacionamentos(DAOe.getAll()); 
-        if (getEstacionamentos() == null)
+        if (estacionamentos == null)
         {
             Estacionamento estacionamento1 = new Estacionamento("Renato Vagas", 30, 30, 1);
-            DAOe.add(estacionamento1);
+            estacionamentos.add(estacionamento1);
+            
             Estacionamento estacionamento2 = new Estacionamento("Pedro Vagas", 30, 30, 2);
-            DAOe.add(estacionamento2);
+            estacionamentos.add(estacionamento2);
+            
             Estacionamento estacionamento3 = new Estacionamento("Duda Vagas", 30, 30, 3);
-            DAOe.add(estacionamento3);
-            setEstacionamentos(DAOe.getAll()); 
+            estacionamentos.add(estacionamento3);
+            
         }
-        List<Estacionamento> teste = getEstacionamentos();
-        for (Estacionamento estacionamento : teste) {
-            System.out.println(estacionamento.getNome() +"  -  " + estacionamento.getId());
-        }
+       
         while (escolhaEstacionamento < 1 || escolhaEstacionamento > 3) {
             System.out.println("ESCOLHA O ESTACIONAMENTO");
             System.out.println("1 - Estacionamento 1");
@@ -321,14 +324,13 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
 
             escolhaEstacionamento = scanner.nextInt();
             setEstacionamentos(DAOe.getAll());
-            setClientes(DAOc.getAll());
-            setVeiculos(DAOv.getAll());
+           
             for (Estacionamento estacionamento : estacionamentos) {
                 if (escolhaEstacionamento == estacionamento.getId()) {
                     setEstacionamentoUsado(estacionamento);
                 }
             }
         }
-        menu(scanner, DAOc, DAOe, DAOv);
+        menu(scanner, DAOe);
     }
 }
