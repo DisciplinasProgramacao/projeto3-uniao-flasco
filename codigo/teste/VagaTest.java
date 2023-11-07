@@ -12,9 +12,13 @@ public class VagaTest {
 
     @BeforeEach
     public void setup() {
-        char fila = 'A';
+        char fila = 24;
         int numero = 9;
         vaga = new Vaga(fila, numero);
+    }
+    @Test
+    public void testGetID() {
+        assertEquals("X9", vaga.getId());
     }
 
     @Test
