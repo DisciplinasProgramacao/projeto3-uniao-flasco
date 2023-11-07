@@ -1,4 +1,5 @@
-package business;
+package business.Exceptions;
+
 public enum CodigoErroVaga implements CodigoErro {
     VAGA_NAO_FINALIZADA(401) {
         @Override

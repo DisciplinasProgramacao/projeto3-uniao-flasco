@@ -1,4 +1,5 @@
-package business;
+package business.Exceptions;
+
 public enum CodigoVeiculo implements CodigoErro {
     VEICULO_JA_EXISTE(301){
         @Override

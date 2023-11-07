@@ -1,4 +1,4 @@
-package business;
+package business.Cliente;
 
 
 import java.io.File;
@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import business.Interfaces.DAO;
 
 public class ClienteDAO implements DAO<Cliente, String> {
     private File file;

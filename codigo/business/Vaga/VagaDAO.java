@@ -1,5 +1,4 @@
-package business;
-
+package business.Vaga;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,38 +9,36 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-public class VeiculoDAO implements DAO<Veiculo, String> {
+public class VagaDAO {
     private File file;
     private FileOutputStream fos;
     private ObjectOutputStream outputFile;
 
-    public VeiculoDAO(String filename) throws IOException {
+    public VagaDAO(String filename) throws IOException {
         file = new File(filename);
        
         fos = new FileOutputStream(file, false);
         outputFile = new ObjectOutputStream(fos);
     }
 
-    public void add(Veiculo veiculo) {
+    public void add(Vaga vaga) {
         try {
-            outputFile.writeObject(veiculo);
+            outputFile.writeObject(vaga);
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar o veículo com placa '" + veiculo.getPlaca() + "' no disco!");
+            System.out.println("ERRO ao gravar a vaga  '" + vaga.getPlaca() + "' no disco!");
             e.printStackTrace();
         }
     }
 
-    public Veiculo get(String placa) {
-        Veiculo veiculo = null;
+    public Vaga get(String placa) {
+        Vaga vaga = null;
 
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
             while (fis.available() > 0) {
-                veiculo = (Veiculo) inputFile.readObject();
+                vaga = (Vaga) inputFile.readObject();
 
-                if (placa.equals(veiculo.getPlaca())) {
-                    return veiculo;
+                if (placa.equals(vaga.getPlaca())) {
+                    return vaga;
                 }
             }
         } catch (Exception e) {
@@ -51,13 +48,13 @@ public class VeiculoDAO implements DAO<Veiculo, String> {
         return null;
     }
 
-    public List<Veiculo> getAll() {
-        List<Veiculo> veiculos = new ArrayList<Veiculo>();
-        Veiculo veiculo = null;
+    public List<Vaga> getAll() {
+        List<Vaga> veiculos = new ArrayList<Vaga>();
+        Vaga vaga = null;
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
             while (fis.available() > 0) {
-                veiculo = (Veiculo) inputFile.readObject();
-                veiculos.add(veiculo);
+                vaga = (Vaga) inputFile.readObject();
+                veiculos.add(vaga);
             }
         } catch (Exception e) {
             System.out.println("ERRO ao gravar veículo no disco!");
@@ -66,27 +63,27 @@ public class VeiculoDAO implements DAO<Veiculo, String> {
         return veiculos;
     }
 
-    public void update(Veiculo veiculo) {
-        List<Veiculo> veiculos = getAll();
+    public void update(Vaga vaga) {
+        List<Vaga> veiculos = getAll();
         int index = -1;
         for (int i = 0; i < veiculos.size(); i++) {
-            if (veiculos.get(i).getPlaca().equals(veiculo.getPlaca())) {
+            if (veiculos.get(i).getPlaca().equals(vaga.getPlaca())) {
                 index = i;
                 break;
             }
         }
 
         if (index != -1) {
-            veiculos.set(index, veiculo);
+            veiculos.set(index, vaga);
         }
         saveToFile(veiculos);
     }
 
-    public void delete(Veiculo veiculo) {
-        List<Veiculo> veiculos = getAll();
+    public void delete(Vaga vaga) {
+        List<Vaga> veiculos = getAll();
         int index = -1;
         for (int i = 0; i < veiculos.size(); i++) {
-            if (veiculos.get(i).getPlaca().equals(veiculo.getPlaca())) {
+            if (veiculos.get(i).getPlaca().equals(vaga.getPlaca())) {
                 index = i;
                 break;
             }
@@ -98,14 +95,14 @@ public class VeiculoDAO implements DAO<Veiculo, String> {
         saveToFile(veiculos);
     }
 
-    public void saveToFile(List<Veiculo> veiculos) {
+    public void saveToFile(List<Vaga> veiculos) {
         try {
             close();
             fos = new FileOutputStream(file, false);
             outputFile = new ObjectOutputStream(fos);
 
-            for (Veiculo veiculo : veiculos) {
-                outputFile.writeObject(veiculo);
+            for (Vaga vaga : veiculos) {
+                outputFile.writeObject(vaga);
             }
             outputFile.flush();
         } catch (Exception e) {

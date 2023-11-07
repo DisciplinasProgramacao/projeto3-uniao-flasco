@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import business.UsoDeVaga;
-import business.Vaga;
-import business.UsoDeVaga.ServicoAdicional;
+import business.UsoDeVaga.UsoDeVaga;
+import business.UsoDeVaga.UsoDeVaga.ServicoAdicional;
+import business.Vaga.Vaga;
 
 public class UsoDeVagaTest {
 

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.Test;
 
-import business.Estacionamento;
+import business.Estacionamento.Estacionamento;
 import junit.framework.*;
 
 

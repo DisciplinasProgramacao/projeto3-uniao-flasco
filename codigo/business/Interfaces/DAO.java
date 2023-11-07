@@ -1,4 +1,4 @@
-package business;
+package business.Interfaces;
 import java.util.List;
 
 public interface DAO<T, K> {

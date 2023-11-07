@@ -1,10 +1,15 @@
-package business;
+package business.Estacionamento;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import business.Cliente.Cliente;
+import business.UsoDeVaga.UsoDeVaga;
+import business.Vaga.Vaga;
+import business.Veiculo.Veiculo;
 
 public class Estacionamento implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -1,4 +1,4 @@
-package business;
+package business.Exceptions;
 public interface CodigoErro {
 	public int getCodigo();
 	public int getNumero();

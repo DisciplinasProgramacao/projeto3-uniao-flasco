@@ -1,4 +1,4 @@
-package business;
+package business.Vaga;
 
 import java.io.Serializable;
 

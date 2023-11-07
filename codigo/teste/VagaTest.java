@@ -2,7 +2,7 @@ package teste;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import business.Vaga;
+import business.Vaga.Vaga;
 
 import org.junit.jupiter.api.BeforeEach;
 

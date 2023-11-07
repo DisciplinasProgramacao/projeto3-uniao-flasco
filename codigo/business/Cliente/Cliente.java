@@ -1,7 +1,9 @@
-package business;
+package business.Cliente;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import business.Veiculo.Veiculo;
 
 public class Cliente implements Serializable {
 

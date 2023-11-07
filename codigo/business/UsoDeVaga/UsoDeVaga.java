@@ -1,9 +1,11 @@
-package business;
+package business.UsoDeVaga;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+
+import business.Vaga.Vaga;
 
 public class UsoDeVaga implements Serializable {
 	private static final long serialVersionUID = 1L;

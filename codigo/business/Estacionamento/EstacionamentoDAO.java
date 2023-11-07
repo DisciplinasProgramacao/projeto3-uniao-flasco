@@ -1,4 +1,4 @@
-package business;
+package business.Estacionamento;
 
 
 import java.io.File;
@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import business.Interfaces.DAO;
 
 public class EstacionamentoDAO implements DAO<Estacionamento, Integer> {
     private File file;

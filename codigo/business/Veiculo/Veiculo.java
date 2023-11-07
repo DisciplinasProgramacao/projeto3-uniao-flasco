@@ -1,9 +1,12 @@
-package business;
+package business.Veiculo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+
+import business.UsoDeVaga.UsoDeVaga;
+import business.Vaga.Vaga;
 /**
  * A classe Veiculo representa um veículo com uma placa associada e um histórico
  * de usos de vagas. Cada veículo pertence a um cliente proprietário e pode estacionar
