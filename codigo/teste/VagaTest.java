@@ -23,13 +23,17 @@ public class VagaTest {
 
     @Test
     public void testEstacionar() {
-        assertTrue(vaga.estacionar());
+        assertTrue(vaga.estacionar("AAA1111"));
+        assertFalse(vaga.isDisponivel());
+        assertEquals("AAA1111", vaga.getVeiculoEstacionado());
     }
 
     @Test
     public void testSair() {
-        vaga.estacionar();
+        vaga.estacionar("AAA1111");
         assertTrue(vaga.sair());
+        assertTrue(vaga.isDisponivel());
+        assertNull(vaga.getVeiculoEstacionado());
     }
 
     @Test

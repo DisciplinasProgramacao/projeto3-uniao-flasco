@@ -38,7 +38,7 @@ class ClienteTest {
         //TODO totalDeUsos, Por enquanto o método retorna 0.
         cliente.addVeiculo(veiculo1);
         cliente.addVeiculo(veiculo2);
-        assertEquals(0, cliente.totalDeUsos());
+        assertEquals(0, cliente.getTotalUsos());
     }
 
 }
