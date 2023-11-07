@@ -25,88 +25,88 @@ public class VagaDAO {
         try {
             outputFile.writeObject(vaga);
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar a vaga  '" + vaga.getPlaca() + "' no disco!");
+            System.out.println("ERRO ao gravar a vaga  '" + vaga.getId() + "' no disco!");
             e.printStackTrace();
         }
     }
 
-    public Vaga get(String placa) {
+    public Vaga get(String id) {
         Vaga vaga = null;
 
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
             while (fis.available() > 0) {
                 vaga = (Vaga) inputFile.readObject();
 
-                if (placa.equals(vaga.getPlaca())) {
+                if (id.equals(vaga.getId())) {
                     return vaga;
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao ler o veículo com placa '" + placa + "' do disco!");
+            System.out.println("ERRO ao ler a vaga com ID '" + id + "' do disco!");
             e.printStackTrace();
         }
         return null;
     }
 
     public List<Vaga> getAll() {
-        List<Vaga> veiculos = new ArrayList<Vaga>();
+        List<Vaga> vagas = new ArrayList<Vaga>();
         Vaga vaga = null;
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
             while (fis.available() > 0) {
                 vaga = (Vaga) inputFile.readObject();
-                veiculos.add(vaga);
+                vagas.add(vaga);
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar veículo no disco!");
+            System.out.println("ERRO ao gravar vaga no disco!");
             e.printStackTrace();
         }
-        return veiculos;
+        return vagas;
     }
 
     public void update(Vaga vaga) {
-        List<Vaga> veiculos = getAll();
+        List<Vaga> vagas = getAll();
         int index = -1;
-        for (int i = 0; i < veiculos.size(); i++) {
-            if (veiculos.get(i).getPlaca().equals(vaga.getPlaca())) {
+        for (int i = 0; i < vagas.size(); i++) {
+            if (vagas.get(i).getId().equals(vaga.getId())) {
                 index = i;
                 break;
             }
         }
 
         if (index != -1) {
-            veiculos.set(index, vaga);
+            vagas.set(index, vaga);
         }
-        saveToFile(veiculos);
+        saveToFile(vagas);
     }
 
     public void delete(Vaga vaga) {
-        List<Vaga> veiculos = getAll();
+        List<Vaga> vagas = getAll();
         int index = -1;
-        for (int i = 0; i < veiculos.size(); i++) {
-            if (veiculos.get(i).getPlaca().equals(vaga.getPlaca())) {
+        for (int i = 0; i < vagas.size(); i++) {
+            if (vagas.get(i).getId().equals(vaga.getId())) {
                 index = i;
                 break;
             }
         }
 
         if (index != -1) {
-            veiculos.remove(index);
+            vagas.remove(index);
         }
-        saveToFile(veiculos);
+        saveToFile(vagas);
     }
 
-    public void saveToFile(List<Vaga> veiculos) {
+    public void saveToFile(List<Vaga> vagas) {
         try {
             close();
             fos = new FileOutputStream(file, false);
             outputFile = new ObjectOutputStream(fos);
 
-            for (Vaga vaga : veiculos) {
+            for (Vaga vaga : vagas) {
                 outputFile.writeObject(vaga);
             }
             outputFile.flush();
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar veículo no disco!");
+            System.out.println("ERRO ao gravar vaga no disco!");
             e.printStackTrace();
         }
     }
