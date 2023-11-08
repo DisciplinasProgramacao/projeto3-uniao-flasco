@@ -199,22 +199,24 @@ public class Aplicacao {
 
   // case 4: Escolher serviços adicionais
     public static void servicosAdicionais(Scanner scanner) {
+       try{
         System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
         String placa = scanner.nextLine();
         Veiculo veiculoDesejado = null;
-
-        for (Veiculo veiculo : veiculos) {
-            if (placa.equals(veiculo.getPlaca())) {
-                veiculoDesejado = veiculo;
-                break;
-            }
         }
 
         if (veiculoDesejado == null) {
             System.out.println("Veículo não encontrado.");
             return;
+            throw new ExcecaoGeral()
+                .setCodigoErro(CodigoErroVeiculoNaoEncontrado.VEICULO_NAO_ENCONTRADO)
+                .set("nome", "data inicial")
+                .set("valor", "12/13/2015");
         }
 
+    }catch(ExcecaoGeral e){            
+        JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();}
 
         System.out.println("Escolha os serviços desejados: ");
         int index = 1;
