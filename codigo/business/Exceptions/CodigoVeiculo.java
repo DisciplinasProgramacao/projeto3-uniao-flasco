@@ -6,6 +6,12 @@ public enum CodigoVeiculo implements CodigoErro {
         public int getCodigo() {
             return 1;
         }
+    },
+    VEICULO_NAO_ENCONTRADO(302){
+        @Override
+        public int getCodigo() {
+            return 2;
+        }
     };
     private final int numero;
 

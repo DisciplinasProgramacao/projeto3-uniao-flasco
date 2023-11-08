@@ -55,7 +55,7 @@ public class Aplicacao {
         System.out.println("3. Estacionar");
         System.out.println("4. Escolher serviços adicionais");
         System.out.println("5. Gerar relatório do cliente");
-       // System.out.println("6. Gerar relatório do veículo");
+        System.out.println("6. Gerar relatório de uso de vagas do veículo");
         System.out.println("7. Gerar relatório de arrecadação");
         System.out.println("8. Sair/voltar");
 
@@ -85,12 +85,17 @@ public class Aplicacao {
                 break;
 
 
-           // case 6:
-             //   scanner.nextLine();
-               // System.out.println("Digite a placa do veículo que deseja gerar o relatório: ");
-               // String placaVeiculos = scanner.nextLine();
-               // gerarRelatorio(placaVeiculos);
-               // break;
+           case 6:
+                try {
+                    scanner.nextLine();
+                    System.out.println("Digite a placa do veículo que deseja gerar o relatório: ");
+                    String placaVeiculo = scanner.nextLine();
+                    gerarRelatorioUsoDeVaga(placaVeiculo);
+                    break;
+                    
+                } catch (ExcecaoGeral e) {
+                  System.out.println(e.getCodigoErro());
+                }
 
             case 7:
                 arrecadacao(scanner);
@@ -256,6 +261,34 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
     System.out.println("ID: " + clienteProcurado.getId());
     System.out.println("Número de Veículos: " + clienteProcurado.getVeiculos().size());
     System.out.println("Total de Usos dos Veículos: " + clienteProcurado.getTotalUsos());
+  }
+
+  
+// case 6: Gerar Relatorio de Uso de Vaga de um veiculo
+  public static void gerarRelatorioUsoDeVaga (String placa) throws ExcecaoGeral{
+    for (Estacionamento e : estacionamentos) {
+        if (e == estacionamentoUsado) {
+            if (e.VeiculoExiste(placa)) {
+                for (Cliente c: e.getAllClientes()){
+                    for (Veiculo v : c.getVeiculos()) {
+                        if (v.getPlaca() == placa) {
+                            v.relatorioDeUsoDeVagasVeiculo();
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+             throw new ExcecaoGeral()
+                            .setCodigoErro(CodigoVeiculo.VEICULO_NAO_ENCONTRADO)
+                            .set("nome", "placa")
+                            .set("valor",  placa);
+                
+            }
+            
+        }
+    }
+    
   }
   
     // case 7: Gerar relatório de arrecadação

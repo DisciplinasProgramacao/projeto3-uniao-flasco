@@ -139,9 +139,9 @@ public class Estacionamento implements Serializable {
     }
 
 
-    public boolean VeiculoExiste(String placaVeiculo){
+    public boolean VeiculoExiste(String placa){
         for (Cliente cliente : clientes) {
-            if (cliente.possuiVeiculo(placaVeiculo) == true) {
+            if (cliente.possuiVeiculo(placa) == true) {
                 return true;
             }
         }
