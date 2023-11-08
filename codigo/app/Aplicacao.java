@@ -186,28 +186,31 @@ public class Aplicacao {
         }
     }
 // case 3: Estacionar
-    public static void estacionar(Scanner scanner) {
+   public static void estacionar(Scanner scanner) {
         try{
         Vaga vaga1 = new Vaga('A', 1);
         System.out.println("Informe a placa do carro que você deseja estacionar: ");
+    
+        String placaVeiculo = scanner.nextLine();
+        for (Veiculo veiculo : veiculos) {
+            if (placaVeiculo.equals(veiculo.getPlaca())) {
 
                 System.out.println("Veículo estacionado na vaga " + vaga1);
-                return;
-            }
-        }
+                return;}}
+            
+        
         System.out.println("Não há vagas disponíveis.");
-    }
+    
 
             throw new ExcecaoGeral()
                 .setCodigoErro(CodigoErroNaoHaVagas.NAO_HA_VAGAS)
                 .set("nome", "data inicial")
                 .set("valor", "12/13/2015");
 
-        }}catch(Exception e){
+        }catch(Exception e){
             JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        }}
-
+        }
   // case 4: Escolher serviços adicionais
     public static void servicosAdicionais(Scanner scanner) {
        try{
