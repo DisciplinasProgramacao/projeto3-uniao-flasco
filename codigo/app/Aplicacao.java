@@ -2,9 +2,11 @@ package app;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.time.temporal.ChronoUnit;
+
 
 
 import javax.swing.JOptionPane;
@@ -22,15 +24,9 @@ public class Aplicacao {
    
     
     private static List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
-    private static Estacionamento estacionamentoUsado;
+    private static int estacionamentoUsado;
 
-    public static Estacionamento getEstacionamentoUsado() {
-        return estacionamentoUsado;
-    }
-
-    public static void setEstacionamentoUsado(Estacionamento estacionamentoUsado) {
-        Aplicacao.estacionamentoUsado = estacionamentoUsado;
-    }
+    
 
     
     
@@ -122,10 +118,16 @@ public class Aplicacao {
         String id = scanner.nextLine();
 
         try {
+            int i =0, j=0;
             Cliente cliente = new Cliente(nome, id);
             for (Estacionamento estacionamento : estacionamentos) {
-                estacionamento.addCliente(cliente);
-                estacionamentoUsado.addCliente(cliente);
+                if (estacionamento.getId() == estacionamentoUsado) {
+                    
+                    estacionamento.addCliente(cliente);
+                    
+                    System.out.println(i++);
+                }
+                System.out.println(j++);
             }
 
             System.out.println("Cliente cadastrado com sucesso!");
@@ -140,34 +142,43 @@ public class Aplicacao {
             System.out.println("Digite a placa do veículo que deseja adicionar.");
             scanner.nextLine();
             String placaVeiculo = scanner.nextLine();
-            
-          if (estacionamentoUsado.VeiculoExiste(placaVeiculo)==true)
-                  {  throw new ExcecaoGeral()
-                            .setCodigoErro(CodigoVeiculo.VEICULO_JA_EXISTE)
-                            .set("nome", "data inicial")
-                            .set("valor", "12/13/2015");
-                  }
-                
-            Veiculo veiculo = new Veiculo(placaVeiculo);
-            System.out.println("Digite o seu ID de cliente.");
-            String idCliente = scanner.nextLine();
-            
-            List<Cliente> clientes = estacionamentoUsado.getAllClientes();
-            for (Cliente cliente : clientes ) {
-                if (idCliente.equals(cliente.getId())) {
-                    for (Estacionamento e : estacionamentos) {
-                        if (e == estacionamentoUsado)
-                       { e.addVeiculo(veiculo, idCliente);
-                        estacionamentoUsado.addVeiculo(veiculo, idCliente);
-                        break;}
-                    }
-                    System.out.println("Veículo adicionado com sucesso!");
-                    break;
-                }
-                else{
-                    System.out.println("ID de cliente não cadastrado.");
-                }
+            Iterator<Estacionamento> it = estacionamentos.iterator();
+            for (Estacionamento e : estacionamentos) {
+                if (e.getId() == estacionamentoUsado) {
+                    
+                    if (e.VeiculoExiste(placaVeiculo)==true)
+                            {  throw new ExcecaoGeral()
+                                      .setCodigoErro(CodigoVeiculo.VEICULO_JA_EXISTE)
+                                      .set("nome", "data inicial")
+                                      .set("valor", "12/13/2015");
+                            }
+                     
+                            Veiculo veiculo = new Veiculo(placaVeiculo);
+                            System.out.println("Digite o seu ID de cliente.");
+                            String idCliente = scanner.nextLine();
+                     
+                            for (Cliente cliente : e.getAllClientes()) {
+                                if (idCliente.equals(cliente.getId())) {
+                                    cliente.addVeiculo(veiculo);
+                                    e.addVeiculo(veiculo, idCliente);
+                                    System.out.println("Veículo adicionado com sucesso!");
+                                    return;
+                                }
+                                else {
+                                    throw new ExcecaoGeral()
+                                            .setCodigoErro(CodigoCliente.CLIENTE_NAO_ENCONTRADO)
+                                            .set("nome", "id")
+                                            .set("valor", idCliente);
+                                }
+                            }
+                     
+                     
+                        }
             }
+                
+            
+            
+            
 
         } catch (ExcecaoGeral e) {
             JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
@@ -330,7 +341,10 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
 
     public static void main(String[] args) throws IOException {
         EstacionamentoDAO DAOe = new EstacionamentoDAO("Estacionamento.dat");
-        setEstacionamentos(DAOe.getAll()); 
+        if (DAOe.getAll() !=null) {
+            
+            setEstacionamentos(DAOe.getAll()); 
+        }
         
         System.out.println("BEM-VINDO AO SISTEMA DE ESTACIONAMENTO\n");
         int escolhaEstacionamento = 0;
@@ -360,7 +374,7 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
            
             for (Estacionamento estacionamento : estacionamentos) {
                 if (escolhaEstacionamento == estacionamento.getId()) {
-                    setEstacionamentoUsado(estacionamento);
+                    estacionamentoUsado = estacionamento.getId();
                 }
             }
         }

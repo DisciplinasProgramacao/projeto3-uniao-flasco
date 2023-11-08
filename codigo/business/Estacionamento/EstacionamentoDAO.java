@@ -20,7 +20,7 @@ public class EstacionamentoDAO implements DAO<Estacionamento, Integer> {
     public EstacionamentoDAO(String filename) throws IOException {
         file = new File(filename);
       
-        fos = new FileOutputStream(file, false);
+        fos = new FileOutputStream(file, true);
         outputFile = new ObjectOutputStream(fos);
     }
 
@@ -60,7 +60,7 @@ public class EstacionamentoDAO implements DAO<Estacionamento, Integer> {
                 estacionamentos.add(estacionamento);
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar estacionamento no disco!");
+            System.out.println("ERRO ao dar getALL!");
             e.printStackTrace();
         }
         return estacionamentos;
