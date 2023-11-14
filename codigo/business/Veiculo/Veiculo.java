@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import business.UsoDeVaga.UsoDeVaga;
@@ -17,7 +18,7 @@ import business.Vaga.Vaga;
  */
 public class Veiculo implements Serializable {
     private String placa;
-    private List<UsoDeVaga> usos;
+    private LinkedList<UsoDeVaga> usos;
    
 
     /**
@@ -27,7 +28,7 @@ public class Veiculo implements Serializable {
      */
     public Veiculo(String placa) {
         setPlaca(placa);
-        this.usos = new ArrayList<>();
+        this.usos = new LinkedList<>();
     }
 
 
@@ -91,16 +92,15 @@ public class Veiculo implements Serializable {
      * @param vaga A vaga da qual o veículo está saindo.
      * @return O valor a ser pago pelo uso da vaga.
      */
-    public double sair(Vaga vaga) {
+    public double sair() {
         double valor = 0.0;
 
-        for (UsoDeVaga usoDeVaga : usos) {
-            if (vaga.equals(usoDeVaga.getVaga())) {
-                LocalDateTime saida = LocalDateTime.now();
-                valor = usoDeVaga.sair(saida);
-                break;
-            }
-        }
+       UsoDeVaga usoDeVaga = usos.getLast();
+                if (usoDeVaga != null) {
+                    
+                    LocalDateTime saida = LocalDateTime.now();
+                    valor = usoDeVaga.sair(saida);
+                }
 
         return valor;
     }

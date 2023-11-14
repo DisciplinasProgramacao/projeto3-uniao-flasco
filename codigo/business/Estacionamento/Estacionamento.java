@@ -3,6 +3,7 @@ package business.Estacionamento;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class Estacionamento implements Serializable {
     private List<Vaga> vagas;
     private int quantFileiras;
     private int vagasPorFileira;
-    private List<UsoDeVaga> usos;
+    
 
     public Estacionamento(String nome, int fileiras, int vagasPorFila, int id) {
         this.nome = nome;
@@ -29,7 +30,7 @@ public class Estacionamento implements Serializable {
         this.quantFileiras = fileiras;
         this.vagasPorFileira = vagasPorFila;
         this.clientes = new ArrayList<>();
-        this.usos = new ArrayList<>();
+        
         this.vagas = new ArrayList<>();
         gerarVagas();
     }
@@ -81,50 +82,40 @@ public class Estacionamento implements Serializable {
         this.clientes.addAll(clientes);
     }
 
-    public List<Cliente> getAllClientes() {
-        return clientes;
+
+public void estacionar (Veiculo veiculo){
+    Vaga vaga = vagas.stream().filter(v -> v.isDisponivel())
+                      .findFirst()
+                      .orElseThrow(() -> new RuntimeException("Vaga não disponivel"));
+
+                      veiculo.estacionar(vaga);
+        
+        
     }
 
-    public void addAllVagas(List<Vaga> vagas) {
-        this.vagas.addAll(vagas);
-    }
-
-    public void estacionar(String placa) {
-        for (Vaga vaga : vagas) {
-            if (vaga.estacionar(placa)) {
-                usos.add(new UsoDeVaga(vaga, LocalDateTime.now()));
-                return;
-            }
-        }
-        System.out.println("Não há vagas disponíveis");
-    }
-
-    public double sair(String placa) {
-        for (UsoDeVaga uso : usos) {
-            if (uso.getVaga().getVeiculoEstacionado().equals(placa) && uso.getSaida() == null) {
-                uso.setSaida(LocalDateTime.now());
-                double valor = uso.valorPago();
-                uso.setValorPago(valor);
-                uso.getVaga().sair();
-                return valor;
-            }
-        }
-        return 0.0;
+    public double sair(Veiculo veiculo) {
+        double valor = veiculo.sair();
+        return valor;
     }
 
     public double totalArrecadado() {
-        return usos.stream().mapToDouble(UsoDeVaga::valorPago).sum();
+        return clientes.stream()
+                .mapToDouble(Cliente::getValorArrecadado)
+                .sum();
     }
 
     public double arrecadadoNoMes(int mes) {
-        return usos.stream()
-                .filter(u -> u.getEntrada().getMonthValue() == mes)
-                .mapToDouble(UsoDeVaga::valorPago)
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.getValorArrecadadoNoMes(mes))
                 .sum();
     }
 
     public double valorMedioPorUso() {
-        return totalArrecadado() / usos.size();
+        
+        return clientes.stream()
+                .mapToDouble(cliente -> cliente.getValorArrecadado() / cliente.getTotalUsos())
+                .average()
+                .orElse(0.0);
     }
 
     public List<String> top5Clientes(int mes) {

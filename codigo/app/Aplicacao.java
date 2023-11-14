@@ -49,11 +49,12 @@ public class Aplicacao {
         System.out.println("1. Cadastrar cliente");
         System.out.println("2. Adicionar novo veículo");
         System.out.println("3. Estacionar");
-        System.out.println("4. Escolher serviços adicionais");
-        System.out.println("5. Gerar relatório do cliente");
-        System.out.println("6. Gerar relatório de uso de vagas do veículo");
-        System.out.println("7. Gerar relatório de arrecadação");
-        System.out.println("8. Sair/voltar");
+        System.out.println("4. Sair com veiculo");
+        System.out.println("5. Escolher serviços adicionais");
+        System.out.println("6. Gerar relatório do cliente");
+        System.out.println("7. Gerar relatório de uso de vagas do veículo");
+        System.out.println("8. Gerar relatório de arrecadação");
+        System.out.println("9. Voltar");
 
         System.out.print("Escolha uma opção: ");
         opcaoMenuPrincipal = scanner.nextInt();
@@ -71,17 +72,21 @@ public class Aplicacao {
             case 3:
                 estacionar(scanner);
                 break;
-
-            case 4:
-                servicosAdicionais(scanner);
+                case 4:
+            //PASSAR O VEICULO POR PARAMETRO
+               // sairComVeiculo(scanner);
                 break;
 
             case 5:
+                servicosAdicionais(scanner);
+                break;
+
+            case 6:
                 gerarRelatorioDoCliente(scanner);
                 break;
 
 
-           case 6:
+           case 7:
                 try {
                     scanner.nextLine();
                     System.out.println("Digite a placa do veículo que deseja gerar o relatório: ");
@@ -93,16 +98,16 @@ public class Aplicacao {
                   System.out.println(e.getCodigoErro());
                 }
 
-            case 7:
+            case 8:
                 arrecadacao(scanner);
                 break;
 
-            case 8:
-            opcaoMenuPrincipal = 8;
+            case 9:
+            opcaoMenuPrincipal = 9;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
         }
-    }while(opcaoMenuPrincipal!=8);
+    }while(opcaoMenuPrincipal!=9);
 
      System.out.println("Saindo do programa.");
                 DAOe.saveToFile(estacionamentos);
@@ -211,7 +216,9 @@ public class Aplicacao {
             JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-  // case 4: Escolher serviços adicionais
+
+
+  // case 5: Escolher serviços adicionais
     public static void servicosAdicionais(Scanner scanner) {
        try{
         System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
@@ -261,7 +268,7 @@ public class Aplicacao {
         }
     }
 
-// case 5: Gerar relatório do cliente
+// case 6: Gerar relatório do cliente
 public static void gerarRelatorioDoCliente(Scanner scanner) {
     System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
     String nomeCliente = scanner.nextLine();
@@ -286,7 +293,7 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
   }
 
   
-// case 6: Gerar Relatorio de Uso de Vaga de um veiculo
+// case 7: Gerar Relatorio de Uso de Vaga de um veiculo
   public static void gerarRelatorioUsoDeVaga (String placa) throws ExcecaoGeral{
     for (Estacionamento e : estacionamentos) {
         if (e == estacionamentoUsado) {
@@ -313,7 +320,7 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
     
   }
   
-    // case 7: Gerar relatório de arrecadação
+    // case 8: Gerar relatório de arrecadação
     public static void arrecadacao(Scanner scanner) {
         Veiculo carro;
         System.out.println("PLACA DO VEÍCULO:");

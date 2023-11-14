@@ -105,9 +105,12 @@ public class Cliente implements Serializable {
      * @return Valor arrecadado pelo veículo ou 0.0 se o veículo não for encontrado.
      */
     public double getValorArrecadado(String placa) {
-        Veiculo veiculo = possuiVeiculo(placa);
-        if (veiculo != null) {
-            return veiculo.totalArrecadado();
+        possuiVeiculo(placa);
+        for (Veiculo v : veiculos) {
+            if (v.getPlaca().equals(placa)) {
+                return v.totalArrecadado();
+            }
+            
         }
         return 0.0;
     }
