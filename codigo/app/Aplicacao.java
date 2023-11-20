@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.time.temporal.ChronoUnit;
@@ -14,9 +15,7 @@ import javax.swing.JOptionPane;
 import business.Cliente.*;
 import business.Estacionamento.*;
 import business.Veiculo.*;
-import business.Interfaces.*;
 import business.UsoDeVaga.*;
-import business.Vaga.*;
 import business.Exceptions.*;
 
 public class Aplicacao {
@@ -38,8 +37,9 @@ public class Aplicacao {
     }
 
     public static void setEstacionamentos(List<Estacionamento> estacionamentos) {
-        estacionamentos.addAll( estacionamentos);
+        Aplicacao.estacionamentos = estacionamentos;
     }
+    
 
     public static void menu(Scanner scanner, EstacionamentoDAO DAOe) {
         int opcaoMenuPrincipal=0; 
@@ -104,6 +104,7 @@ public class Aplicacao {
 
             case 9:
             opcaoMenuPrincipal = 9;
+            break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
         }
@@ -191,95 +192,120 @@ public class Aplicacao {
         }
     }
 // case 3: Estacionar
-   public static void estacionar(Scanner scanner) {
-        try{
-        Vaga vaga1 = new Vaga('A', 1);
+public static void estacionar(Scanner scanner) {
+    try {
         System.out.println("Informe a placa do carro que você deseja estacionar: ");
-    
         String placaVeiculo = scanner.nextLine();
-        for (Veiculo veiculo : veiculos) {
-            if (placaVeiculo.equals(veiculo.getPlaca())) {
 
-                System.out.println("Veículo estacionado na vaga " + vaga1);
-                return;}}
-            
+        for (Estacionamento estacionamento : estacionamentos) {
+            if (estacionamento.getId() == estacionamentoUsado) {
+                
+                if (estacionamento.VeiculoExiste(placaVeiculo)) {
+                    Veiculo veiculo = estacionamento.getAllClientes().stream()
+                            .flatMap(cliente -> cliente.getVeiculos().stream())
+                            .filter(v -> v.getPlaca().equals(placaVeiculo))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("Erro ao obter veículo"));
         
-        System.out.println("Não há vagas disponíveis.");
-    
-
-            throw new ExcecaoGeral()
-                .setCodigoErro(CodigoErroNaoHaVagas.NAO_HA_VAGAS)
-                .set("nome", "data inicial")
-                .set("valor", "12/13/2015");
-
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+                    estacionamento.estacionar(veiculo);
+                    System.out.println("Veículo estacionado com sucesso.");
+                }
+            }
         }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
+// case 4: Sair Do Estacionamento com Carro
+public static void sairDoEstacionamento(Scanner scanner) {
+    try {
+        System.out.println("Informe a placa do carro que você deseja retirar do estacionamento: ");
+        String placaVeiculo = scanner.nextLine();
+
+        for (Estacionamento estacionamento : estacionamentos) {
+            if (estacionamento.getId()==(estacionamentoUsado)) {
+                
+                if (estacionamento.VeiculoExiste(placaVeiculo)) {
+                    Veiculo veiculo = estacionamento.getAllClientes().stream()
+                            .flatMap(cliente -> cliente.getVeiculos().stream())
+                            .filter(v -> v.getPlaca().equals(placaVeiculo))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("Erro ao obter veículo"));
+
+                    double valorPago = estacionamento.sair(veiculo);
+                    System.out.println("Veículo retirado do estacionamento. Valor pago: " + valorPago);
+                }
+            }
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
 
 
   // case 5: Escolher serviços adicionais
-    public static void servicosAdicionais(Scanner scanner) {
-       try{
-        System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
-        String placa = scanner.nextLine();
-        Veiculo veiculoDesejado = null;
-        }
+  public static void servicosAdicionais(Scanner scanner) {
+    System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
+    String placa = scanner.nextLine();
 
-        if (veiculoDesejado == null) {
-            System.out.println("Veículo não encontrado.");
-            return;
-            throw new ExcecaoGeral()
-                .setCodigoErro(CodigoErroVeiculoNaoEncontrado.VEICULO_NAO_ENCONTRADO)
-                .set("nome", "data inicial")
-                .set("valor", "12/13/2015");
-        }
+    Veiculo veiculoDesejado = estacionamentos.stream()
+            .filter(e -> e.getId() == estacionamentoUsado)
+            .flatMap(e -> e.getAllClientes().stream())
+            .flatMap(c -> c.getVeiculos().stream())
+            .filter(v -> v.getPlaca().equalsIgnoreCase(placa))
+            .findFirst()
+            .orElseThrow(() -> {
+                throw new ExcecaoGeral()
+                        .setCodigoErro(CodigoVeiculo.VEICULO_NAO_ENCONTRADO)
+                        .set("nome", "placa")
+                        .set("valor", placa);
+            });
 
-    }catch(ExcecaoGeral e){            
-        JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();}
-
-        System.out.println("Escolha os serviços desejados: ");
-        int index = 1;
-        for (UsoDeVaga.ServicoAdicional servico : UsoDeVaga.ServicoAdicional.values()) {
-            System.out.println(index + ". " + servico.name() + " - R$ " + servico.getValor() + " (Tempo mínimo: " + servico.getTempoMinimo() + " minutos)");
-            index++;
-        }
-
-        System.out.println("Digite o número do serviço desejado (ou 0 para voltar):");
-        int escolha = scanner.nextInt();
-        scanner.nextLine();
-
-        if (escolha > 0 && escolha <= UsoDeVaga.ServicoAdicional.values().length) {
-            UsoDeVaga.ServicoAdicional servicoEscolhido = UsoDeVaga.ServicoAdicional.values()[escolha - 1];
-
-              UsoDeVaga usoAtual = veiculoDesejado.getUsos().get(veiculoDesejado.getUsos().size() - 1);
-            long periodo = usoAtual.getEntrada().until(LocalDateTime.now(), ChronoUnit.MINUTES);
-
-              if (periodo < servicoEscolhido.getTempoMinimo()) {
-                System.out.println("Tempo de uso atual do veículo é insuficiente para este serviço.");
-                return;
-            }
-
-            usoAtual.adicionarServico(servicoEscolhido);
-            System.out.println("Serviço " + servicoEscolhido.name() + " adicionado com sucesso!");
-        } else if (escolha != 0) {
-            System.out.println("Opção inválida. Tente novamente.");
-        }
+    System.out.println("Escolha os serviços desejados: ");
+    int index = 1;
+    for (UsoDeVaga.ServicoAdicional servico : UsoDeVaga.ServicoAdicional.values()) {
+        System.out.println(index + ". " + servico.name() + " - R$ " + servico.getValor() +
+                " (Tempo mínimo: " + servico.getTempoMinimo() + " minutos)");
+        index++;
     }
+
+    System.out.println("Digite o número do serviço desejado (ou 0 para voltar):");
+    int escolha = scanner.nextInt();
+    scanner.nextLine();
+
+    if (escolha > 0 && escolha <= UsoDeVaga.ServicoAdicional.values().length) {
+        UsoDeVaga.ServicoAdicional servicoEscolhido = UsoDeVaga.ServicoAdicional.values()[escolha - 1];
+        LinkedList<UsoDeVaga> usos = (LinkedList<UsoDeVaga>) veiculoDesejado.getUsos();
+        UsoDeVaga usoAtual = usos.getLast();
+        long periodo = usoAtual.getEntrada().until(LocalDateTime.now(), ChronoUnit.MINUTES);
+
+        if (periodo < servicoEscolhido.getTempoMinimo()) {
+            System.out.println("Tempo de uso atual do veículo é insuficiente para este serviço.");
+            return;
+        }
+
+        usoAtual.adicionarServico(servicoEscolhido);
+        System.out.println("Serviço " + servicoEscolhido.name() + " adicionado com sucesso!");
+    } else if (escolha != 0) {
+        System.out.println("Opção inválida. Tente novamente.");
+    }
+}
+
+    
 
 // case 6: Gerar relatório do cliente
 public static void gerarRelatorioDoCliente(Scanner scanner) {
     System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
     String nomeCliente = scanner.nextLine();
 
-    Cliente clienteProcurado = null;
-    for (Cliente cliente : getClientes()) {
-        if (nomeCliente.equals(cliente.getNome())) {
-            clienteProcurado = cliente;
-            break;
-        }
-    }
+    Cliente clienteProcurado = estacionamentos.stream()
+            .filter(e -> e.getId() == estacionamentoUsado)
+            .flatMap(e -> e.getAllClientes().stream())
+            .filter(cliente -> nomeCliente.equals(cliente.getNome()))
+            .findFirst()
+            .orElse(null);
 
     if (clienteProcurado == null) {
         System.out.println("Cliente não encontrado.");
@@ -290,13 +316,41 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
     System.out.println("ID: " + clienteProcurado.getId());
     System.out.println("Número de Veículos: " + clienteProcurado.getVeiculos().size());
     System.out.println("Total de Usos dos Veículos: " + clienteProcurado.getTotalUsos());
-  }
+}
+
 
   
 // case 7: Gerar Relatorio de Uso de Vaga de um veiculo
-  public static void gerarRelatorioUsoDeVaga (String placa) throws ExcecaoGeral{
+public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
+    estacionamentos.stream()
+            .filter(e -> e.getId() == estacionamentoUsado)
+            .findFirst()
+            .ifPresentOrElse(
+                    estacionamento -> {
+                        if (estacionamento.VeiculoExiste(placa)) {
+                            estacionamento.getAllClientes().stream()
+                                    .flatMap(c -> c.getVeiculos().stream())
+                                    .filter(v -> v.getPlaca().equals(placa))
+                                    .findFirst()
+                                    .ifPresent(Veiculo::relatorioDeUsoDeVagasVeiculo);
+                        } else {
+                            throw new ExcecaoGeral()
+                                    .setCodigoErro(CodigoVeiculo.VEICULO_NAO_ENCONTRADO)
+                                    .set("nome", "placa")
+                                    .set("valor", placa);
+                        }
+                    },
+                    () -> {
+                        throw new ExcecaoGeral()
+                                .setCodigoErro(CodigoEstacionamento.ESTACIONAMENTO_NAO_ENCONTRADO)
+                                .set("valor", estacionamentoUsado);
+                    }
+            );
+}
+
+  /*public static void gerarRelatorioUsoDeVaga (String placa) throws ExcecaoGeral{
     for (Estacionamento e : estacionamentos) {
-        if (e == estacionamentoUsado) {
+        if (e.getId() == estacionamentoUsado) {
             if (e.VeiculoExiste(placa)) {
                 for (Cliente c: e.getAllClientes()){
                     for (Veiculo v : c.getVeiculos()) {
@@ -318,43 +372,54 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
         }
     }
     
-  }
+  }*/
   
     // case 8: Gerar relatório de arrecadação
     public static void arrecadacao(Scanner scanner) {
         Veiculo carro;
         System.out.println("PLACA DO VEÍCULO:");
         String placaVeiculo = scanner.nextLine();
-        for (Veiculo veiculo : veiculos) {
-            if (placaVeiculo.equals(veiculo.getPlaca())) {
-                carro = veiculo;
-                scanner.nextLine();
+        for (Estacionamento e : estacionamentos) {
+            if (e.getId() == estacionamentoUsado) {
+                if (e.VeiculoExiste(placaVeiculo)) {
+                    for (Cliente c : e.getAllClientes()) {
+                        for (Veiculo v : c.getVeiculos()) {
+                            if (v.getPlaca() == placaVeiculo) {
+                                carro = v;
+                                scanner.nextLine();
 
-                System.out.println("Escolha um relatório para ser gerado: ");
-                System.out.println("1- Gerar relatório de arrecadação no mês.");
-                System.out.println("2- Gerar relatório de arrecadação total.");
+                                System.out.println("Escolha um relatório para ser gerado: ");
+                                System.out.println("1- Gerar relatório de arrecadação no mês.");
+                                System.out.println("2- Gerar relatório de arrecadação total.");
 
-                int escolha = scanner.nextInt();
+                                int escolha = scanner.nextInt();
 
-                switch (escolha) {
-                    case 1:
-                        System.out.println("Digite o número do mês desejado: ");
-                        int mes = scanner.nextInt();
-                        double arrecadadoNoMes = carro.arrecadadoNoMes(mes);
-                        System.out.println("A arrecadação no mês " + mes + ": " + arrecadadoNoMes);
-                        break;
+                                switch (escolha) {
+                                    case 1:
+                                        System.out.println("Digite o número do mês desejado: ");
+                                        int mes = scanner.nextInt();
+                                        double arrecadadoNoMes = carro.arrecadadoNoMes(mes);
+                                        System.out.println("A arrecadação no mês " + mes + ": " + arrecadadoNoMes);
+                                        break;
 
-                    case 2:
-                        double totalArrecadado = carro.totalArrecadado();
-                        System.out.println("Total arrecadado: " + totalArrecadado);
-                        break;
+                                    case 2:
+                                        double totalArrecadado = carro.totalArrecadado();
+                                        System.out.println("Total arrecadado: " + totalArrecadado);
+                                        break;
 
-                    default:
-                        System.out.println("Opção inválida. Digite outra opção!");
-                        break;
+                                    default:
+                                        System.out.println("Opção inválida. Digite outra opção!");
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    System.out.println("Veículo não encontrado.");
                 }
             }
         }
+        
     }
 
     public static void main(String[] args) throws IOException {

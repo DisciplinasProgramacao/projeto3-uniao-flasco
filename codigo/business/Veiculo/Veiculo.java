@@ -1,17 +1,19 @@
 package business.Veiculo;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import business.UsoDeVaga.UsoDeVaga;
 import business.UsoDeVaga.UsoDeVaga.ServicoAdicional;
 import business.Vaga.Vaga;
+
 /**
  * A classe Veiculo representa um veículo com uma placa associada e um histórico
- * de usos de vagas. Cada veículo pertence a um cliente proprietário e pode estacionar
+ * de usos de vagas. Cada veículo pertence a um cliente proprietário e pode
+ * estacionar
  * em diferentes vagas durante o tempo.
  * 
  * @author @RenatoMAP77
@@ -19,10 +21,10 @@ import business.Vaga.Vaga;
 public class Veiculo implements Serializable {
     private String placa;
     private LinkedList<UsoDeVaga> usos;
-   
 
     /**
-     * Construtor da classe Veiculo. Inicializa uma instância de veículo com a placa fornecida.
+     * Construtor da classe Veiculo. Inicializa uma instância de veículo com a placa
+     * fornecida.
      *
      * @param placa A placa do veículo.
      */
@@ -30,7 +32,6 @@ public class Veiculo implements Serializable {
         setPlaca(placa);
         this.usos = new LinkedList<>();
     }
-
 
     /**
      * Define a placa do veículo.
@@ -56,7 +57,7 @@ public class Veiculo implements Serializable {
      * @param usos A lista de usos de vagas do veículo.
      */
     public void setUsos(List<UsoDeVaga> usos) {
-        this.usos = usos;
+        this.usos = (LinkedList<UsoDeVaga>) usos;
     }
 
     /**
@@ -69,10 +70,12 @@ public class Veiculo implements Serializable {
     }
 
     /**
-     * Estaciona o veículo em uma vaga específica, registrando o uso da vaga e marcando-a como indisponível.
+     * Estaciona o veículo em uma vaga específica, registrando o uso da vaga e
+     * marcando-a como indisponível.
      *
      * @param vaga A vaga em que o veículo será estacionado.
-     * @throws IllegalArgumentException Se a vaga não existir ou não estiver disponível.
+     * @throws IllegalArgumentException Se a vaga não existir ou não estiver
+     *                                  disponível.
      */
     public void estacionar(Vaga vaga) {
         if (vaga == null || !vaga.isDisponivel())
@@ -87,7 +90,8 @@ public class Veiculo implements Serializable {
     }
 
     /**
-     * Registra a saída do veículo de uma vaga específica e calcula o valor a ser pago.
+     * Registra a saída do veículo de uma vaga específica e calcula o valor a ser
+     * pago.
      *
      * @param vaga A vaga da qual o veículo está saindo.
      * @return O valor a ser pago pelo uso da vaga.
@@ -95,12 +99,12 @@ public class Veiculo implements Serializable {
     public double sair() {
         double valor = 0.0;
 
-       UsoDeVaga usoDeVaga = usos.getLast();
-                if (usoDeVaga != null) {
-                    
-                    LocalDateTime saida = LocalDateTime.now();
-                    valor = usoDeVaga.sair(saida);
-                }
+        UsoDeVaga usoDeVaga = usos.getLast();
+        if (usoDeVaga != null) {
+
+            LocalDateTime saida = LocalDateTime.now();
+            valor = usoDeVaga.sair(saida);
+        }
 
         return valor;
     }
@@ -119,9 +123,11 @@ public class Veiculo implements Serializable {
     }
 
     /**
-     * Calcula o total arrecadado com os usos de vagas feitos pelo veículo em um mês específico.
+     * Calcula o total arrecadado com os usos de vagas feitos pelo veículo em um mês
+     * específico.
      *
-     * @param mes O mês para o qual se deseja calcular a arrecadação (1 para janeiro, 2 para fevereiro, etc.).
+     * @param mes O mês para o qual se deseja calcular a arrecadação (1 para
+     *            janeiro, 2 para fevereiro, etc.).
      * @return O total arrecadado no mês especificado.
      */
     public double arrecadadoNoMes(int mes) {
@@ -146,16 +152,16 @@ public class Veiculo implements Serializable {
         return usos.size();
     }
 
-
-    public void relatorioDeUsoDeVagasVeiculo(){
-       
+    public void relatorioDeUsoDeVagasVeiculo() {
+        int i = 0;
         System.out.println("Placa: " + placa);
         for (UsoDeVaga u : usos) {
+            System.out.println("Uso de vaga " + i++);
             System.out.println("Vaga: " + u.getVaga().getId());
             System.out.println("Entrada: " + u.getEntrada());
             System.out.println("Saída: " + u.getSaida());
             System.out.println("Valor pago: " + u.getValorPago());
-            
+
             List<ServicoAdicional> servicos = u.getServicosAdicionais();
             if (servicos.size() > 0) {
                 System.out.println("Serviços adicionais:");
@@ -163,8 +169,7 @@ public class Veiculo implements Serializable {
                     System.out.println(servico);
                 }
             }
-            
-            
+
         }
 
     }

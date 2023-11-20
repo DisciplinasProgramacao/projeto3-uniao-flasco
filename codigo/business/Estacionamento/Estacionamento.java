@@ -1,15 +1,13 @@
 package business.Estacionamento;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import business.Cliente.Cliente;
-import business.UsoDeVaga.UsoDeVaga;
+
 import business.Vaga.Vaga;
 import business.Veiculo.Veiculo;
 
@@ -138,6 +136,11 @@ public void estacionar (Veiculo veiculo){
         }
         return false;
         
+    }
+
+
+    public List<Cliente> getAllClientes() {
+        return clientes;
     }
 }
 
