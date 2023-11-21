@@ -26,17 +26,8 @@ import business.Plano.Turnos;
 
 public class Aplicacao {
 
-   
-    
     private static List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
     private static int estacionamentoUsado;
-
-    
-
-    
-    
-
-  
 
     public static List<Estacionamento> getEstacionamentos() {
         return estacionamentos;
@@ -46,7 +37,6 @@ public class Aplicacao {
         Aplicacao.estacionamentos = estacionamentos;
     }
     
-
     public static void menu(Scanner scanner, EstacionamentoDAO DAOe) {
         int opcaoMenuPrincipal=0; 
         
@@ -65,7 +55,6 @@ public class Aplicacao {
 
         System.out.print("Escolha uma opção: ");
         opcaoMenuPrincipal = scanner.nextInt();
-
        
         switch (opcaoMenuPrincipal) {
             case 1:
@@ -177,9 +166,6 @@ public class Aplicacao {
     }
     while (op > 3 || op<1);
         
-    
-
-        
             int i =0, j=0;
             Cliente cliente = new Cliente(nome, id, plano);
             for (Estacionamento estacionamento : estacionamentos) {
@@ -197,7 +183,6 @@ public class Aplicacao {
             System.out.println("Erro ao cadastrar o cliente: " + e.getMessage());
         }
     }
-
 
     // case 2: Adicionar veículo
     public static void adicionarVeiculo( Scanner scanner) {
@@ -235,14 +220,9 @@ public class Aplicacao {
                                 }
                             }
                      
-                     
                         }
             }
                 
-            
-            
-            
-
         } catch (ExcecaoGeral e) {
             JOptionPane.showMessageDialog(null, e, e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -253,6 +233,7 @@ public static void estacionar(Scanner scanner) {
     try {
         System.out.println("Informe a placa do carro que você deseja estacionar: ");
         String placaVeiculo = scanner.nextLine();
+        scanner.nextLine();
 
         for (Estacionamento estacionamento : estacionamentos) {
             if (estacionamento.getId() == estacionamentoUsado) {
@@ -279,6 +260,7 @@ public static void sairDoEstacionamento(Scanner scanner) {
     try {
         System.out.println("Informe a placa do carro que você deseja retirar do estacionamento: ");
         String placaVeiculo = scanner.nextLine();
+        scanner.nextLine();
 
         for (Estacionamento estacionamento : estacionamentos) {
             if (estacionamento.getId()==(estacionamentoUsado)) {
@@ -295,7 +277,6 @@ public static void sairDoEstacionamento(Scanner scanner) {
                             .map(Cliente::getPlano)
                             .orElse(null);
                             
-
                     double valorPago = estacionamento.sair(veiculo, plano);
                     System.out.println("Veículo retirado do estacionamento. Valor pago: " + valorPago);
                 }
@@ -307,11 +288,11 @@ public static void sairDoEstacionamento(Scanner scanner) {
     }
 }
 
-
   // case 5: Escolher serviços adicionais
   public static void servicosAdicionais(Scanner scanner) {
     System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
     String placa = scanner.nextLine();
+    scanner.nextLine();
 
     Veiculo veiculoDesejado = estacionamentos.stream()
             .filter(e -> e.getId() == estacionamentoUsado)
@@ -356,12 +337,11 @@ public static void sairDoEstacionamento(Scanner scanner) {
     }
 }
 
-    
-
 // case 6: Gerar relatório do cliente
 public static void gerarRelatorioDoCliente(Scanner scanner) {
     System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
     String nomeCliente = scanner.nextLine();
+    scanner.nextLine();
 
     Cliente clienteProcurado = estacionamentos.stream()
             .filter(e -> e.getId() == estacionamentoUsado)
@@ -380,8 +360,6 @@ public static void gerarRelatorioDoCliente(Scanner scanner) {
     System.out.println("Número de Veículos: " + clienteProcurado.getVeiculos().size());
     System.out.println("Total de Usos dos Veículos: " + clienteProcurado.getTotalUsos());
 }
-
-
   
 // case 7: Gerar Relatorio de Uso de Vaga de um veiculo
 public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
@@ -410,38 +388,13 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
                     }
             );
 }
-
-  /*public static void gerarRelatorioUsoDeVaga (String placa) throws ExcecaoGeral{
-    for (Estacionamento e : estacionamentos) {
-        if (e.getId() == estacionamentoUsado) {
-            if (e.VeiculoExiste(placa)) {
-                for (Cliente c: e.getAllClientes()){
-                    for (Veiculo v : c.getVeiculos()) {
-                        if (v.getPlaca() == placa) {
-                            v.relatorioDeUsoDeVagasVeiculo();
-                            break;
-                        }
-                    }
-                }
-            }
-            else {
-             throw new ExcecaoGeral()
-                            .setCodigoErro(CodigoVeiculo.VEICULO_NAO_ENCONTRADO)
-                            .set("nome", "placa")
-                            .set("valor",  placa);
-                
-            }
-            
-        }
-    }
-    
-  }*/
   
     // case 8: Gerar relatório de arrecadação
     public static void arrecadacao(Scanner scanner) {
         Veiculo carro;
         System.out.println("PLACA DO VEÍCULO:");
         String placaVeiculo = scanner.nextLine();
+        scanner.nextLine();
         for (Estacionamento e : estacionamentos) {
             if (e.getId() == estacionamentoUsado) {
                 if (e.VeiculoExiste(placaVeiculo)) {

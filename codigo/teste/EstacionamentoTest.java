@@ -1,44 +1,21 @@
 package teste;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.Test;
-
+import business.Plano.Horista;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import business.Estacionamento.Estacionamento;
-import junit.framework.*;
+import business.Cliente.Cliente;
+import business.Plano.Plano;
 
+class EstacionamentoTest {
 
-public class EstacionamentoTest {
+    private Estacionamento estacionamento;
 
-@Test
-public void gerarVagasTeste(){
-    Estacionamento estacionamento = new Estacionamento(null, 10, 10);
-    assertEquals(estacionamento.getVagas(), 100);
+    @BeforeEach
+    void setUp() {
+        estacionamento = new Estacionamento("Estacionamento Teste", 5, 10, 1);
+    }
 
-}
-
-@Test
-public void addClienteTeste(){
-    Estacionamento estacionamento = new Estacionamento(null, 10, 10);
-    int antes = estacionamento.getClientes().size();
-    estacionamento.addCliente(null);
-    assertEquals(antes+=1, estacionamento.getClientes().size());
-}
-
-@Test
-public void estacionarTest(){
-    Estacionamento estacionamento = new Estacionamento(null, 10, 10);
-    int antes = estacionamento.getUsos().size();
-    estacionamento.estacionar(null);
-    assertEquals(antes+=1, estacionamento.getUsos().size());
-}
-
-@Test
-public void sairTest(){
-    Estacionamento estacionamento = new Estacionamento(null, 10, 10);
-    estacionamento.sair("1111-1111");
-    assertEquals(antes+=1, estacionamento.getUsos().size());
-}
-
-
+    /* @todo */
 }

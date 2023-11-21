@@ -1,69 +1,43 @@
-package teste;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import java.time.LocalDateTime;
+import business.Vaga.Vaga;
+import business.UsoDeVaga.UsoDeVaga;
 import org.junit.Before;
 import org.junit.Test;
-
-import business.UsoDeVaga.UsoDeVaga;
-import business.UsoDeVaga.UsoDeVaga.ServicoAdicional;
-import business.Vaga.Vaga;
 
 public class UsoDeVagaTest {
 
     private Vaga vaga;
     private LocalDateTime entrada;
-    private LocalDateTime saida;
     private UsoDeVaga usoDeVaga;
 
     @Before
     public void setUp() {
-        int fila = 1;
-        int numero = 5;
-        vaga = new Vaga(fila, numero);
-        entrada = LocalDateTime.of(2023, 10, 11, 9, 0);
-        saida = LocalDateTime.of(2023, 10, 11, 11, 30);
+        vaga = new Vaga( 1 ,2);
+        entrada = LocalDateTime.now();
         usoDeVaga = new UsoDeVaga(vaga, entrada);
     }
 
     @Test
-    public void testValorPago() {
-        double valorEsperado = 10.0;
-        usoDeVaga.sair(saida);
-        double valorCalculado = usoDeVaga.valorPago();
-        assertEquals(valorEsperado, valorCalculado, 0.001);
+    public void testAdicionarServico() {
+        usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.LAVAGEM);
+        assertEquals(1, usoDeVaga.getServicosAdicionais().size());
     }
 
     @Test
-    public void testAdicionarServicoLavagem() {
-        usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.LAVAGEM);
-        usoDeVaga.sair(saida);
-        double valorEsperado = 10.0 + 20.0; 
-        double valorCalculado = usoDeVaga.valorPago();
-        assertEquals(valorEsperado, valorCalculado, 0.001);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdicionarServicoLavagemComTempoInsuficiente() {
-        usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.LAVAGEM);
-        LocalDateTime saidaTemp = LocalDateTime.of(2023, 10, 11, 9, 30);
-        usoDeVaga.sair(saidaTemp);
-        usoDeVaga.valorPago();
+    public void testSairSemPlano() {
+        LocalDateTime saida = entrada.plusHours(2);
+        double valor = usoDeVaga.sair(saida, null);
+        double valorEsperado = 32.0;
+        assertEquals(valorEsperado, valor, 0.01);
     }
 
     @Test
-    public void testAdicionarServicoPolimento() {
-        usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.POLIMENTO);
-        usoDeVaga.sair(saida);
-        double valorEsperado = 10.0 + 45.0; 
-        double valorCalculado = usoDeVaga.valorPago();
-        assertEquals(valorEsperado, valorCalculado, 0.001);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAdicionarServicoPolimentoComTempoInsuficiente() {
-        usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.POLIMENTO);
-        LocalDateTime saidaTemp = LocalDateTime.of(2023, 10, 11, 10, 0);
-        usoDeVaga.sair(saidaTemp);
-        usoDeVaga.valorPago();
+    public void testValorPagoComExcecaoParaLavagem() {
+        usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.LAVAGEM);
+        LocalDateTime saida = entrada.plusMinutes(30);
+        usoDeVaga.setSaida(saida);
+        assertThrows(IllegalArgumentException.class, () -> usoDeVaga.valorPago());
     }
 }

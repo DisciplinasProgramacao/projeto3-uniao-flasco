@@ -45,6 +45,7 @@ public class UsoDeVaga implements Serializable {
 	 * Método para calcular o valor total a ser pago ao sair do estacionamento.
 	 *
 	 * @param saida A data e hora de saída da vaga.
+	 * @param plano O plano associado ao cliente.
 	 * @return O valor total a ser pago.
 	 */
 	public double sair(LocalDateTime saida, Plano plano) {
