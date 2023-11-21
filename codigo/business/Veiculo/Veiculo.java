@@ -6,6 +6,7 @@ import java.time.Month;
 import java.util.LinkedList;
 import java.util.List;
 
+import business.Plano.Plano;
 import business.UsoDeVaga.UsoDeVaga;
 import business.UsoDeVaga.UsoDeVaga.ServicoAdicional;
 import business.Vaga.Vaga;
@@ -96,14 +97,14 @@ public class Veiculo implements Serializable {
      * @param vaga A vaga da qual o veículo está saindo.
      * @return O valor a ser pago pelo uso da vaga.
      */
-    public double sair() {
+    public double sair(Plano plano) {
         double valor = 0.0;
 
         UsoDeVaga usoDeVaga = usos.getLast();
         if (usoDeVaga != null) {
 
             LocalDateTime saida = LocalDateTime.now();
-            valor = usoDeVaga.sair(saida);
+            valor = usoDeVaga.sair(saida,plano);
         }
 
         return valor;
