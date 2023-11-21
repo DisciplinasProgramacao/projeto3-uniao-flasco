@@ -1,3 +1,5 @@
+package teste;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import java.time.LocalDateTime;
