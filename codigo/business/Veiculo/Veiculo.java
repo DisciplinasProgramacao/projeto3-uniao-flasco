@@ -75,8 +75,7 @@ public class Veiculo implements Serializable {
      * marcando-a como indisponível.
      *
      * @param vaga A vaga em que o veículo será estacionado.
-     * @throws IllegalArgumentException Se a vaga não existir ou não estiver
-     *                                  disponível.
+     * @throws IllegalArgumentException Se a vaga não existir ou não estiver disponível.
      */
     public void estacionar(Vaga vaga) {
         if (vaga == null || !vaga.isDisponivel())
@@ -94,7 +93,7 @@ public class Veiculo implements Serializable {
      * Registra a saída do veículo de uma vaga específica e calcula o valor a ser
      * pago.
      *
-     * @param vaga A vaga da qual o veículo está saindo.
+     * @param plano O plano do cliente que determina as tarifas de estacionamento.
      * @return O valor a ser pago pelo uso da vaga.
      */
     public double sair(Plano plano) {
@@ -170,9 +169,6 @@ public class Veiculo implements Serializable {
                     System.out.println(servico);
                 }
             }
-
         }
-
     }
-
 }
