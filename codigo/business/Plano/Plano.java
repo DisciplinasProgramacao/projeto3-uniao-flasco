@@ -1,6 +1,6 @@
 package business.Plano;
 
-public class Plano {
+public abstract class Plano {
    private String tipo;
   
    public Plano(String tipo)
@@ -15,4 +15,7 @@ public class Plano {
    {
     return this.tipo;
    }
+  
 }
+  
+

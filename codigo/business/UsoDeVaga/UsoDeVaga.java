@@ -5,6 +5,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import business.Plano.Mensalista;
+import business.Plano.Plano;
+import business.Plano.Turnista;
 import business.Vaga.Vaga;
 
 public class UsoDeVaga implements Serializable {
@@ -44,9 +47,24 @@ public class UsoDeVaga implements Serializable {
 	 * @param saida A data e hora de saída da vaga.
 	 * @return O valor total a ser pago.
 	 */
-	public double sair(LocalDateTime saida) {
+	public double sair(LocalDateTime saida, Plano plano) {
+		double valor= 0.0;
 		this.saida = saida;
-		double valor = this.valorPago();
+		if (plano instanceof Turnista) {
+			Turnista turnista = (Turnista) plano;
+			if (turnista.getTurno().getInicio().isAfter(this.entrada.toLocalTime())) {
+				valor = this.valorPago();
+			}
+			else if (turnista.getTurno().getFim().isBefore(this.saida.toLocalTime())) {
+				valor = this.valorPago();
+			}
+			
+		}
+		 else if (plano instanceof Mensalista)
+		 			valor = 0;
+		else {
+			valor = this.valorPago();
+		}
 		for (ServicoAdicional servico : servicosAdicionais) {
 			valor += servico.getValor();
 		}
