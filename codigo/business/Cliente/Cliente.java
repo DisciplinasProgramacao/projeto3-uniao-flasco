@@ -50,18 +50,30 @@ public class Cliente implements Serializable {
         this.id = id;
     }
 
+    /**
+     * Define o plano associado ao cliente.
+     *
+     * @param plano O plano associado ao cliente.
+     */
     public void setPlano(Plano plano) {
         this.plano = plano;
     }
+
+    /**
+     * Retorna o plano associado ao cliente.
+     *
+     * @return O plano associado ao cliente.
+     */
     public Plano getPlano() {
         return plano;
     }
 
     /**
-     * Construtor que inicializa um cliente com nome e ID especificados.
+     * Construtor que inicializa um cliente com nome, ID e plano especificados.
      *
-     * @param nome Nome do cliente.
-     * @param id ID do cliente.
+     * @param nome  O nome do cliente.
+     * @param id    O ID do cliente.
+     * @param plano O plano associado ao cliente.
      */
     public Cliente(String nome, String id, Plano plano) {
         this.nome = nome;
@@ -84,7 +96,7 @@ public class Cliente implements Serializable {
      * Verifica se o cliente possui um veículo com uma placa específica.
      *
      * @param placa A placa do veículo a ser verificada.
-     * @return O veículo com a placa fornecida ou null se não for encontrado.
+     * @return true se o cliente possui o veículo com a placa fornecida, caso contrário, false.
      */
     public boolean possuiVeiculo(String placa) {
         for(Veiculo veiculo : veiculos){
@@ -98,7 +110,7 @@ public class Cliente implements Serializable {
     /**
      * Calcula o total de usos de todos os veículos associados ao cliente.
      *
-     * @return Total de usos.
+     * @return O total de usos de todos os veículos do cliente.
      */
     public int getTotalUsos() {
         int totalUsos = 0;
