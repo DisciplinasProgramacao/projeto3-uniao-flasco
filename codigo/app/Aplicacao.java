@@ -73,8 +73,7 @@ public class Aplicacao {
                 estacionar(scanner);
                 break;
                 case 4:
-            //PASSAR O VEICULO POR PARAMETRO
-               // sairComVeiculo(scanner);
+            sairDoEstacionamento(scanner);
                 break;
 
             case 5:
