@@ -18,6 +18,11 @@ import business.Estacionamento.*;
 import business.Veiculo.*;
 import business.UsoDeVaga.*;
 import business.Exceptions.*;
+import business.Plano.Horista;
+import business.Plano.Plano;
+import business.Plano.Turnista;
+import business.Plano.Mensalista;
+import business.Plano.Turnos;
 
 public class Aplicacao {
 
@@ -121,16 +126,62 @@ public class Aplicacao {
     }
 
     // case 1: Cadastrar cliente
-    public static void cadastrarCliente( Scanner scanner) {
+     public static void cadastrarCliente( Scanner scanner) {
+        try {
         System.out.println("Informe o nome do cliente: ");
         scanner.nextLine();
         String nome = scanner.nextLine();
         System.out.println("Informe o ID do cliente: ");
         String id = scanner.nextLine();
+        int op;
+        
+        Plano plano = null;
+        do{
+        System.out.println("Escolha o tipo do plano do cliente \n 1-Horista\n2-Turnista\n3-Mensalista");
+        op = scanner.nextInt();
+        switch (op) {
+            case 1:
+            plano = new Horista();   
+                break;
+            case 2:
+                int opcao;
+            do{
+            System.out.println("Escolha um turno:");
+            System.out.println("1 - Manha");
+            System.out.println("2 - Tarde");
+            System.out.println("3 - Noite");
+            opcao = scanner.nextInt();
+            if(opcao == 1)
+            {
+             plano = new Turnista("Turnista",Turnos.MANHA);  
+            }
+            else if(opcao == 2)
+            {
+                plano = new Turnista("Turnista",Turnos.TARDE);
+            }
+            else if(opcao ==3)
+            {
+                plano = new Turnista("Turnista",Turnos.NOITE);
+            }
+            }
+            while(opcao>3 || opcao<1);
+            
+                break;
+            case 3:
+            plano = new Mensalista("Mensalista");
+                break;
+            default:
+                break;
+        }
+        
+    }
+    while (op > 3 || op<1);
+        
+    
 
-        try {
+        
             int i =0, j=0;
-            Cliente cliente = new Cliente(nome, id);
+            Cliente cliente = new Cliente(nome, id, plano);
             for (Estacionamento estacionamento : estacionamentos) {
                 if (estacionamento.getId() == estacionamentoUsado) {
                     
@@ -146,6 +197,7 @@ public class Aplicacao {
             System.out.println("Erro ao cadastrar o cliente: " + e.getMessage());
         }
     }
+
 
     // case 2: Adicionar veículo
     public static void adicionarVeiculo( Scanner scanner) {
@@ -237,8 +289,14 @@ public static void sairDoEstacionamento(Scanner scanner) {
                             .filter(v -> v.getPlaca().equals(placaVeiculo))
                             .findFirst()
                             .orElseThrow(() -> new RuntimeException("Erro ao obter veículo"));
+                            Plano plano = estacionamento.getAllClientes().stream()
+                            .filter(cliente -> cliente.getVeiculos().stream().anyMatch(v -> v.getPlaca().equals(placaVeiculo)))
+                            .findFirst()
+                            .map(Cliente::getPlano)
+                            .orElse(null);
+                            
 
-                    double valorPago = estacionamento.sair(veiculo);
+                    double valorPago = estacionamento.sair(veiculo, plano);
                     System.out.println("Veículo retirado do estacionamento. Valor pago: " + valorPago);
                 }
             }
