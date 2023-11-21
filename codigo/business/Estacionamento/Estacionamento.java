@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import business.Cliente.Cliente;
-
+import business.Plano.Plano;
 import business.Vaga.Vaga;
 import business.Veiculo.Veiculo;
 
@@ -91,8 +91,8 @@ public void estacionar (Veiculo veiculo){
         
     }
 
-    public double sair(Veiculo veiculo) {
-        double valor = veiculo.sair();
+    public double sair(Veiculo veiculo,Plano plano) {
+        double valor = veiculo.sair(plano);
         return valor;
     }
 
