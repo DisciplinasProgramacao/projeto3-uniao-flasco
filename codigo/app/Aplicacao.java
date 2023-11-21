@@ -2,6 +2,7 @@ package app;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,8 +54,9 @@ public class Aplicacao {
         System.out.println("5. Escolher serviços adicionais");
         System.out.println("6. Gerar relatório do cliente");
         System.out.println("7. Gerar relatório de uso de vagas do veículo");
-        System.out.println("8. Gerar relatório de arrecadação");
-        System.out.println("9. Voltar");
+        System.out.println("8. Gerar relatório de arrecadação de um veiculo ");
+        System.out.println("9. Gerar relatorio de arrecadacao dos estacionamentos");
+        System.out.println("10. Voltar");
 
         System.out.print("Escolha uma opção: ");
         opcaoMenuPrincipal = scanner.nextInt();
@@ -100,14 +102,18 @@ public class Aplicacao {
             case 8:
                 arrecadacao(scanner);
                 break;
-
             case 9:
-            opcaoMenuPrincipal = 9;
+               arrecadacaoEstacionamento(scanner);
+
+                break;
+
+            case 10:
+            opcaoMenuPrincipal = 10;
             break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
         }
-    }while(opcaoMenuPrincipal!=9);
+    }while(opcaoMenuPrincipal!=10);
 
      System.out.println("Saindo do programa.");
                 DAOe.saveToFile(estacionamentos);
@@ -419,6 +425,40 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
             }
         }
         
+    }
+    // case 9: Gerar relatório de arrecadação dos estacionamentos
+    public static void arrecadacaoEstacionamento(Scanner scanner) {
+        System.out.println("Escolha um relatório para ser gerado: ");
+        System.out.println("1- Gerar relatório de arrecadação no mês.");
+        System.out.println("2- Gerar relatório de arrecadação total.");
+
+        int escolha = scanner.nextInt();
+
+        switch (escolha) {
+            case 1:
+                System.out.println("Digite o número do mês desejado: ");
+                int mes = scanner.nextInt();
+                estacionamentos.stream()
+                .sorted(Comparator.comparingDouble(e -> ((Estacionamento) e).arrecadadoNoMes(mes)).reversed())
+                .forEach(estacionamento -> {
+                    double arrecadadoNoMes = estacionamento.arrecadadoNoMes(mes);
+                    System.out.println("Estacionamento " + estacionamento.getId() + ": " +
+                            "Arrecadação no mês " + mes + ": " + arrecadadoNoMes); });
+                break;
+
+                case 2:
+                estacionamentos.stream()
+                        .sorted(Comparator.comparingDouble(Estacionamento::totalArrecadado).reversed())
+                        .forEach(estacionamento -> {
+                            System.out.println("Estacionamento " + estacionamento.getId() + ": " +
+                                    "Total arrecadado: " + estacionamento.totalArrecadado());
+                        });
+                break;
+
+            default:
+                System.out.println("Opção inválida. Digite outra opção!");
+                break;
+        }
     }
 
     public static void main(String[] args) throws IOException {
