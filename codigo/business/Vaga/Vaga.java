@@ -62,7 +62,12 @@ public class Vaga implements Serializable {
         this.disponivel = true; // Por padrão a vaga está disponível quando criada
     }
 
-
+    /**
+     * Estaciona um veículo na vaga.
+     *
+     * @param placa A placa do veículo a ser estacionado.
+     * @return true se o veículo foi estacionado com sucesso, false caso contrário.
+     */
     public boolean estacionar(String placa) {
         if (isDisponivel()) {
             setDisponivel(false);
@@ -72,6 +77,11 @@ public class Vaga implements Serializable {
         return false;
     }
 
+    /**
+     * Remove um veículo da vaga.
+     *
+     * @return true se o veículo foi removido com sucesso, false caso contrário.
+     */
     public boolean sair() {
         if (!isDisponivel()) {
             setDisponivel(true);
@@ -80,5 +90,4 @@ public class Vaga implements Serializable {
         }
         return false;
     }
-
 }
