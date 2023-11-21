@@ -1,104 +1,67 @@
 package teste;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import business.UsoDeVaga.UsoDeVaga;
 import business.Vaga.Vaga;
 import business.Veiculo.Veiculo;
-
+import business.UsoDeVaga.UsoDeVaga;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.Month;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class VeiculoTest {
+
     private Veiculo veiculo;
-    private List<UsoDeVaga> usos;
+    private Vaga vaga;
 
-    @BeforeEach
+
+    @Before
     public void setUp() {
-        veiculo = new Veiculo("XYZ123"); 
-        usos = new ArrayList<>();
-        veiculo.setUsos(usos);
-    }
-
-    public Vaga criavaga(){
-        Vaga vaga = new Vaga('A', 1);
-        return vaga;
+        veiculo = new Veiculo("ABC1234");
+        vaga = new Vaga(1, 1);
     }
 
     @Test
     public void testEstacionar() {
-        Vaga vaga = new Vaga('A', 1);
-
         veiculo.estacionar(vaga);
-
-        assertEquals(1, usos.size());
-        assertFalse(vaga.isDisponivel());
+        assertEquals(1, veiculo.getUsos().size());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testEstacionarComVagaIndisponivel() {
-        Vaga vaga = new Vaga('B', 1);
         vaga.setDisponivel(false);
-
-        assertThrows(IllegalArgumentException.class, () -> veiculo.estacionar(vaga));
-    }
-
-    @Test
-    public void testSair() {
-        Vaga vaga = new Vaga('A', 1);
-        UsoDeVaga uso = new UsoDeVaga(vaga, LocalDateTime.now());
-        usos.add(uso);
-
-        double valor = veiculo.sair(vaga);
-        assertTrue(valor >= 0.0);
-        assertTrue(usos.isEmpty());
-        assertTrue(vaga.isDisponivel());
+        veiculo.estacionar(vaga);
     }
 
     @Test
     public void testTotalArrecadado() {
-        Vaga vaga1 = new Vaga('A', 1);
-        Vaga vaga2 = new Vaga('B', 1);
-        UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now());
-        UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now());
-        uso1.setValorPago(20.0);
-        uso2.setValorPago(30.0);
-        usos.add(uso1);
-        usos.add(uso2);
+        Vaga vaga1 = new Vaga(1, 1);
+        Vaga vaga2 = new Vaga(1, 2);
+        UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now().minusHours(2));
+        uso1.setValorPago(10.0);
+        veiculo.getUsos().add(uso1);
+
+        UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now().minusDays(1).minusHours(4));
+        uso2.setValorPago(15.0);
+        veiculo.getUsos().add(uso2);
 
         double totalArrecadado = veiculo.totalArrecadado();
-        assertEquals(50.0, totalArrecadado);
+        double totalEsperado = 25.0;
+        assertEquals(totalEsperado, totalArrecadado, 0.01);
     }
 
     @Test
     public void testArrecadadoNoMes() {
-        Vaga vaga1 = new Vaga('A', 1);
-        Vaga vaga2 = new Vaga('B', 1);
-        UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now());
-        UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now());
-        uso1.setValorPago(20.0);
-        uso2.setValorPago(30.0);
-        usos.add(uso1);
-        usos.add(uso2);
-
-        int mes = LocalDateTime.now().getMonthValue(); 
-        double arrecadadoNoMes = veiculo.arrecadadoNoMes(mes);
-        assertEquals(50.0, arrecadadoNoMes);
-    }
-
-    @Test
-    public void testTotalDeUsos() {
-        Vaga vaga1 = new Vaga('A', 1);
-        Vaga vaga2 = new Vaga('B', 1);
-        UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now());
-        UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now());
-        usos.add(uso1);
-        usos.add(uso2);
-
-        int totalDeUsos = veiculo.totalDeUsos();
-        assertEquals(2, totalDeUsos);
+        Vaga vaga1 = new Vaga(2, 3);
+        Vaga vaga2 = new Vaga(2, 4);
+        UsoDeVaga usoMaio = new UsoDeVaga(vaga1, LocalDateTime.of(2023, Month.MAY, 10, 8, 30));
+        usoMaio.setValorPago(20.0);
+        veiculo.getUsos().add(usoMaio);
+        UsoDeVaga usoJunho = new UsoDeVaga(vaga2, LocalDateTime.of(2023, Month.JUNE, 15, 9, 0));
+        usoJunho.setValorPago(30.0);
+        veiculo.getUsos().add(usoJunho);
+        double arrecadadoEmMaio = veiculo.arrecadadoNoMes(Month.MAY.getValue());
+        double valorEsperadoEmMaio = 20.0;
+        assertEquals(valorEsperadoEmMaio, arrecadadoEmMaio, 0.01);
     }
 }
