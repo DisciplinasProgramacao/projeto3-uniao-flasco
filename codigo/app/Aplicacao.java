@@ -18,7 +18,6 @@ import business.Estacionamento.*;
 import business.Veiculo.*;
 import business.UsoDeVaga.*;
 import business.Exceptions.*;
-import business.Plano.*;
 
 public class Aplicacao {
 
@@ -122,41 +121,16 @@ public class Aplicacao {
     }
 
     // case 1: Cadastrar cliente
-     public static void cadastrarCliente( Scanner scanner) {
+    public static void cadastrarCliente( Scanner scanner) {
         System.out.println("Informe o nome do cliente: ");
         scanner.nextLine();
         String nome = scanner.nextLine();
         System.out.println("Informe o ID do cliente: ");
         String id = scanner.nextLine();
-        int op;
-        Plano plano;
-        do{
-        System.out.println("Escolha o tipo do plano do cliente \n 1-Horista\n2-Turnista\n3-Mensalista");
-        op = scanner.nextInt();
-        if (op>3 || op<1) {
-            System.out.println("Opção inválida!");
-        }
-        switch (op) {
-            case 1:
-            plano = new Plano("Horista");   
-                break;
-            case 2:
-            plano = new Plano("Turnista");
-                break;
-            case 3:
-            plano = new Plano("Mensalista");
-            default:
-                break;
-        }
-        
-    }
-    while (op > 3 || op<1);
-        
-    
 
         try {
             int i =0, j=0;
-            Cliente cliente = new Cliente(nome, id, plano);
+            Cliente cliente = new Cliente(nome, id);
             for (Estacionamento estacionamento : estacionamentos) {
                 if (estacionamento.getId() == estacionamentoUsado) {
                     
@@ -253,40 +227,18 @@ public static void sairDoEstacionamento(Scanner scanner) {
     try {
         System.out.println("Informe a placa do carro que você deseja retirar do estacionamento: ");
         String placaVeiculo = scanner.nextLine();
-        int op;
-        String p = "Horista";
-        do{
-        System.out.println("Informe o tipo de plano utilizado \n 1-Horista \n2-Mensalista\n3-Turnista");
-        op = scanner.nextInt();
-        
-        switch (op)
-        {
-          case 1:
-          p= "Horista";
-          break;
-          case 2:
-          p="Mensalista";
-          break;
-          case 3:
-          p ="Turnista";
-          default:
-          break;
-        }
-        }
-        while(op>3 || op<1);
-        String pl = p;
+
         for (Estacionamento estacionamento : estacionamentos) {
             if (estacionamento.getId()==(estacionamentoUsado)) {
                 
                 if (estacionamento.VeiculoExiste(placaVeiculo)) {
                     Veiculo veiculo = estacionamento.getAllClientes().stream()
-                            .filter(plano -> plano.getPlano().getTipo().equals(pl))
                             .flatMap(cliente -> cliente.getVeiculos().stream())
                             .filter(v -> v.getPlaca().equals(placaVeiculo))
                             .findFirst()
                             .orElseThrow(() -> new RuntimeException("Erro ao obter veículo"));
 
-                    double valorPago = estacionamento.sair(veiculo,pl);
+                    double valorPago = estacionamento.sair(veiculo);
                     System.out.println("Veículo retirado do estacionamento. Valor pago: " + valorPago);
                 }
             }
