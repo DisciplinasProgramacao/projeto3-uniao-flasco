@@ -2,7 +2,7 @@ package business.Cliente;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+import business.Plano.Plano;
 import business.Veiculo.Veiculo;
 
 public class Cliente implements Serializable {
@@ -10,6 +10,7 @@ public class Cliente implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String nome;
+    private Plano plano;
     private String id;
     private List<Veiculo> veiculos;
 
@@ -49,15 +50,23 @@ public class Cliente implements Serializable {
         this.id = id;
     }
 
+    public void setPlano(Plano plano) {
+        this.plano = plano;
+    }
+    public Plano getPlano() {
+        return plano;
+    }
+
     /**
      * Construtor que inicializa um cliente com nome e ID especificados.
      *
      * @param nome Nome do cliente.
      * @param id ID do cliente.
      */
-    public Cliente(String nome, String id) {
+    public Cliente(String nome, String id, Plano plano) {
         this.nome = nome;
         this.id = id;
+        this.plano = plano;
         this.veiculos = new ArrayList<>();
     }
 
@@ -69,6 +78,7 @@ public class Cliente implements Serializable {
     public void addVeiculo(Veiculo veiculo) {
         veiculos.add(veiculo);
     }
+
 
     /**
      * Verifica se o cliente possui um veículo com uma placa específica.
