@@ -28,6 +28,7 @@ public class Aplicacao {
 
     private static List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
     private static int estacionamentoUsado;
+    private static List<Cliente> clientes = new ArrayList<Cliente>();
 
     public static List<Estacionamento> getEstacionamentos() {
         return estacionamentos;
@@ -51,7 +52,9 @@ public class Aplicacao {
         System.out.println("7. Gerar relatório de uso de vagas do veículo");
         System.out.println("8. Gerar relatório de arrecadação de um veiculo ");
         System.out.println("9. Gerar relatorio de arrecadacao dos estacionamentos");
-        System.out.println("10. Voltar");
+        System.out.println("10. Gerar relatorio de arrecadacao média dos horistas");
+        System.out.println("11. Gerar relatorio de usos médios de mensalistas");
+        System.out.println("12. Voltar");
 
         System.out.print("Escolha uma opção: ");
         opcaoMenuPrincipal = scanner.nextInt();
@@ -100,14 +103,19 @@ public class Aplicacao {
                arrecadacaoEstacionamento(scanner);
 
                 break;
-
             case 10:
-            opcaoMenuPrincipal = 10;
+                arrecadacaoMediaHoristas(scanner);
+                break;
+            case 11:
+                mediaUsoMensalistas(scanner);
+                break;
+            case 12:
+            opcaoMenuPrincipal = 12;
             break;
             default:
                 System.out.println("Opção inválida. Tente novamente.");
         }
-    }while(opcaoMenuPrincipal!=10);
+    }while(opcaoMenuPrincipal!=12);
 
      System.out.println("Saindo do programa.");
                 DAOe.saveToFile(estacionamentos);
@@ -164,7 +172,7 @@ public class Aplicacao {
         }
         
     }
-    while (op > 3 || op<1);
+    while (op > 3 || op < 1);
         
             int i =0, j=0;
             Cliente cliente = new Cliente(nome, id, plano);
@@ -172,6 +180,7 @@ public class Aplicacao {
                 if (estacionamento.getId() == estacionamentoUsado) {
                     
                     estacionamento.addCliente(cliente);
+                    clientes.add(cliente);
                     
                     System.out.println(i++);
                 }
@@ -471,6 +480,62 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
                 break;
         }
     }
+
+    //case 10: Arrecadação média gerada pelos clientes horistas no mes
+    public static void arrecadacaoMediaHoristas(Scanner scanner){
+        int numHorista = 0;
+        double arrecadacao = 0;
+        for (Estacionamento estacionamento: estacionamentos){
+            if(estacionamento.getId() == estacionamentoUsado){
+            for(Cliente cliente : estacionamento.getAllClientes()){
+                    if(cliente.getPlano() instanceof Horista){
+                numHorista++;}}}}
+        
+
+        System.out.println("Digite o número do mês desejado: ");
+        int mes = scanner.nextInt();
+        for(Estacionamento estacionamento: estacionamentos){
+            arrecadacao += estacionamento.arrecadadoNoMes(mes);
+        }
+
+        try{
+        double resultado = arrecadacao/numHorista;
+
+        System.out.println("A média gerada pelos horistas no mes " + mes + " foi " + resultado);
+        }catch(Exception e){System.out.println("Não há horistas no estacionamento");}
+
+    }
+
+    //case 11: Uso médio dos clientes mensalistas
+    public static void mediaUsoMensalistas(Scanner scanner){
+        int numMensalista = 0;
+        int numUsos = 0;
+        System.out.println("Digite o número do mês desejado: ");
+        int mes = scanner.nextInt();
+
+        for (Estacionamento estacionamento: estacionamentos){
+            System.out.println("Aa");
+            if(estacionamento.getId() == estacionamentoUsado){
+            for(Cliente cliente : estacionamento.getAllClientes()){
+                    if(cliente.getPlano() instanceof Mensalista){
+                        numMensalista++;
+                    for(Veiculo veiculo: cliente.getVeiculos()){
+                        for (UsoDeVaga usoDeVaga: veiculo.getUsos()){
+                            if(usoDeVaga.getEntrada().getMonthValue() == mes){
+                                numUsos++;
+                            }
+                        }
+                    }}}}}
+
+        try{
+        double resultado = numUsos/numMensalista;
+        System.out.println("A quantidade média de usos por clientes mensalistas no mes " + mes + " foi " + resultado);}
+        catch(Exception e){
+            System.out.println("Não há mensalistas no estacionamento");
+        }
+        
+    }
+
 
     public static void main(String[] args) throws IOException {
         EstacionamentoDAO DAOe = new EstacionamentoDAO("Estacionamento.dat");
