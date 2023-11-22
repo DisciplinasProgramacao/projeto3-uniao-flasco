@@ -159,7 +159,7 @@ public void estacionar (Veiculo veiculo){
      */
     public double totalArrecadado() {
         return clientes.stream()
-                .mapToDouble(Cliente::getValorArrecadado)
+                .mapToDouble(Cliente::getValorTotalArrecadado)
                 .sum();
     }
 
@@ -183,7 +183,7 @@ public void estacionar (Veiculo veiculo){
     public double valorMedioPorUso() {
         
         return clientes.stream()
-                .mapToDouble(cliente -> cliente.getValorArrecadado() / cliente.getTotalUsos())
+                .mapToDouble(cliente -> cliente.getValorTotalArrecadado() / cliente.getTotalUsos())
                 .average()
                 .orElse(0.0);
     }
