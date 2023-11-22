@@ -142,7 +142,7 @@ public class Cliente implements Serializable {
      *
      * @return Valor total arrecadado.
      */
-    public double getValorArrecadado() {
+    public double getValorTotalArrecadado() {
         double totalArrecadado = 0.0;
         for (Veiculo veiculo : veiculos) {
             totalArrecadado += veiculo.totalArrecadado();
