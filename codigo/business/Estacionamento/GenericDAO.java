@@ -1,26 +1,32 @@
 package business.Estacionamento;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import business.Interfaces.DAO;
 
-public class EstacionamentoDAO implements DAO<Estacionamento, Integer> {
+/**
+ * Classe EstacionamentoDAO
+ * 
+ * @author RenatoMAP77
+ *
+ */
+public class GenericDAO implements DAO<Estacionamento, Integer> {
     private File file;
     private FileOutputStream fos;
     private ObjectOutputStream outputFile;
 
-    public EstacionamentoDAO(String filename) throws IOException {
+    public GenericDAO(String filename) throws IOException {
         file = new File(filename);
-      
-        fos = new FileOutputStream(file, true);
+        if (!file.exists()) {
+            
+            file.createNewFile();
+        }
+        fos = new FileOutputStream(file, false); 
         outputFile = new ObjectOutputStream(fos);
     }
 
@@ -28,70 +34,57 @@ public class EstacionamentoDAO implements DAO<Estacionamento, Integer> {
         try {
             outputFile.writeObject(estacionamento);
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar o estacionamento com ID '" + estacionamento.getId() + "' no disco!");
+            System.out.println("ERRO ao gravar o estacionamento '" + estacionamento.getNome() + "' no disco!");
             e.printStackTrace();
         }
     }
 
-    public Estacionamento get(Integer id) {
+    public Estacionamento get(Integer chave) {
         Estacionamento estacionamento = null;
 
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
             while (fis.available() > 0) {
                 estacionamento = (Estacionamento) inputFile.readObject();
 
-                if (id.equals(estacionamento.getId())) {
+                if (chave.equals(estacionamento.getId())) {
                     return estacionamento;
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao ler o estacionamento com ID '" + id + "' do disco!");
+            System.out.println("ERRO ao ler o estacionamento '" + chave + "' do disco!");
             e.printStackTrace();
         }
         return null;
     }
 
     public List<Estacionamento> getAll() {
-        List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
+        List<Estacionamento> estacionamentos = new ArrayList<>();
         Estacionamento estacionamento = null;
         try (FileInputStream fis = new FileInputStream(file); ObjectInputStream inputFile = new ObjectInputStream(fis)) {
+
             while (fis.available() > 0) {
                 estacionamento = (Estacionamento) inputFile.readObject();
                 estacionamentos.add(estacionamento);
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao dar getALL!");
+            System.out.println("ERRO ao gravar estacionamento no disco!");
             e.printStackTrace();
         }
         return estacionamentos;
     }
 
-    public void update(Estacionamento estacionamento) {
+    public void update(Estacionamento e) {
         List<Estacionamento> estacionamentos = getAll();
-        int index = -1;
-        for (int i = 0; i < estacionamentos.size(); i++) {
-            if (estacionamentos.get(i).getId() == estacionamento.getId()) {
-                index = i;
-                break;
-            }
-        }
-
+        int index = estacionamentos.indexOf(e);
         if (index != -1) {
-            estacionamentos.set(index, estacionamento);
+            estacionamentos.set(index, e);
         }
         saveToFile(estacionamentos);
     }
 
-    public void delete(Estacionamento estacionamento) {
+    public void delete(Estacionamento e) {
         List<Estacionamento> estacionamentos = getAll();
-        int index = -1;
-        for (int i = 0; i < estacionamentos.size(); i++) {
-            if (estacionamentos.get(i).getId() == estacionamento.getId()) {
-                index = i;
-                break;
-            }
-        }
-
+        int index = estacionamentos.indexOf(e);
         if (index != -1) {
             estacionamentos.remove(index);
         }
@@ -99,10 +92,13 @@ public class EstacionamentoDAO implements DAO<Estacionamento, Integer> {
     }
 
     public void saveToFile(List<Estacionamento> estacionamentos) {
-        try (FileOutputStream fos = new FileOutputStream(file, false);
-             ObjectOutputStream outputFile = new ObjectOutputStream(fos)) {
-            for (Estacionamento est : estacionamentos) {
-                outputFile.writeObject(est);
+        try {
+            close();
+            fos = new FileOutputStream(file, false); 
+            outputFile = new ObjectOutputStream(fos);
+
+            for (Estacionamento estacionamento : estacionamentos) {
+                outputFile.writeObject(estacionamento);
             }
             outputFile.flush();
         } catch (Exception e) {
@@ -111,8 +107,7 @@ public class EstacionamentoDAO implements DAO<Estacionamento, Integer> {
         }
     }
     
-
-    public void close() throws IOException {
+    private void close() throws IOException {
         outputFile.close();
         fos.close();
     }

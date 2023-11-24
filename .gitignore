@@ -1,6 +1,6 @@
 # Compiled class file
 **/*.class
-
+/Estacionamento.dat
 # Log file
 **/*.log
 

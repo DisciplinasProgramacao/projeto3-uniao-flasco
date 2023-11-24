@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,7 +28,7 @@ public class Aplicacao {
 
     private static List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
     private static int estacionamentoUsado;
-    private static List<Cliente> clientes = new ArrayList<Cliente>();
+    
 
     public static List<Estacionamento> getEstacionamentos() {
         return estacionamentos;
@@ -38,7 +38,7 @@ public class Aplicacao {
         Aplicacao.estacionamentos = estacionamentos;
     }
     
-    public static void menu(Scanner scanner, EstacionamentoDAO DAOe) {
+    public static void menu(Scanner scanner, GenericDAO DAOe) {
         int opcaoMenuPrincipal=0; 
         
         do{
@@ -180,7 +180,7 @@ public class Aplicacao {
                 if (estacionamento.getId() == estacionamentoUsado) {
                     
                     estacionamento.addCliente(cliente);
-                    clientes.add(cliente);
+                    
                     
                     System.out.println(i++);
                 }
@@ -199,7 +199,7 @@ public class Aplicacao {
             System.out.println("Digite a placa do veículo que deseja adicionar.");
             scanner.nextLine();
             String placaVeiculo = scanner.nextLine();
-            Iterator<Estacionamento> it = estacionamentos.iterator();
+            
             for (Estacionamento e : estacionamentos) {
                 if (e.getId() == estacionamentoUsado) {
                     
@@ -538,7 +538,7 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
 
 
     public static void main(String[] args) throws IOException {
-        EstacionamentoDAO DAOe = new EstacionamentoDAO("Estacionamento.dat");
+        GenericDAO DAOe = new GenericDAO("Estacionamento.dat");
         if (DAOe.getAll() !=null) {
             
             setEstacionamentos(DAOe.getAll()); 
@@ -547,28 +547,28 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
         System.out.println("BEM-VINDO AO SISTEMA DE ESTACIONAMENTO\n");
         int escolhaEstacionamento = 0;
         Scanner scanner = new Scanner(System.in);
-
-        if (estacionamentos == null)
-        {
+        if (estacionamentos == null || estacionamentos.isEmpty()) {
+            estacionamentos = new ArrayList<>();  
             Estacionamento estacionamento1 = new Estacionamento("Renato Vagas", 30, 30, 1);
             estacionamentos.add(estacionamento1);
-            
+        
             Estacionamento estacionamento2 = new Estacionamento("Pedro Vagas", 30, 30, 2);
             estacionamentos.add(estacionamento2);
-            
+        
             Estacionamento estacionamento3 = new Estacionamento("Duda Vagas", 30, 30, 3);
             estacionamentos.add(estacionamento3);
-            
+        
+            DAOe.saveToFile(estacionamentos);
         }
        
         while (escolhaEstacionamento < 1 || escolhaEstacionamento > 3) {
             System.out.println("ESCOLHA O ESTACIONAMENTO");
-            System.out.println("1 - Estacionamento 1");
-            System.out.println("2 - Estacionamento 2");
-            System.out.println("3 - Estacionamento 3");
+            System.out.println("1 - Estacionamento 1 - " + estacionamentos.get(0).getNome());
+            System.out.println("2 - Estacionamento 2 - "+ estacionamentos.get(1).getNome());
+            System.out.println("3 - Estacionamento 3 - "+ estacionamentos.get(2).getNome());
 
             escolhaEstacionamento = scanner.nextInt();
-            setEstacionamentos(DAOe.getAll());
+            //setEstacionamentos(DAOe.getAll());
            
             for (Estacionamento estacionamento : estacionamentos) {
                 if (escolhaEstacionamento == estacionamento.getId()) {
