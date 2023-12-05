@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 
 import javax.swing.JOptionPane;
 
+import business.Populador;
 import business.Cliente.*;
 import business.Estacionamento.*;
 import business.Veiculo.*;
@@ -549,15 +550,7 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
         Scanner scanner = new Scanner(System.in);
         if (estacionamentos == null || estacionamentos.isEmpty()) {
             estacionamentos = new ArrayList<>();  
-            Estacionamento estacionamento1 = new Estacionamento("Renato Vagas", 30, 30, 1);
-            estacionamentos.add(estacionamento1);
-        
-            Estacionamento estacionamento2 = new Estacionamento("Pedro Vagas", 30, 30, 2);
-            estacionamentos.add(estacionamento2);
-        
-            Estacionamento estacionamento3 = new Estacionamento("Duda Vagas", 30, 30, 3);
-            estacionamentos.add(estacionamento3);
-        
+            estacionamentos.addAll(Populador.popularEstacionamentos());
             DAOe.saveToFile(estacionamentos);
         }
        
