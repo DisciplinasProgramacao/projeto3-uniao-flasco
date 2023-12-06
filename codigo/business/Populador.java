@@ -4,7 +4,9 @@ import business.Cliente.Cliente;
 import business.Estacionamento.Estacionamento;
 import business.Plano.Horista;
 import business.Plano.Mensalista;
+import business.Plano.Plano;
 import business.Plano.Turnista;
+import business.Plano.Turnos;
 import business.Veiculo.Veiculo;
 
 import java.util.ArrayList;
@@ -32,14 +34,14 @@ public class Populador {
 
         
         estacionamento1.addCliente(criarCliente("Cliente1A", "1A", new Mensalista("Mensalista")));
-        estacionamento1.addCliente(criarCliente("Cliente2A", "2A", new Turnista("Turnista", Turnista.Turnos.MANHA)));
+        estacionamento1.addCliente(criarCliente("Cliente2A", "2A", new Turnista("Turnista", Turnos.MANHA)));
 
         
         estacionamento2.addCliente(criarCliente("Cliente1B", "1B", new Horista("Horista")));
         estacionamento2.addCliente(criarCliente("Cliente2B", "2B", new Mensalista("Mensalista")));
 
         
-        estacionamento3.addCliente(criarCliente("Cliente1C", "1C", new Turnista("Turnista", Turnista.Turnos.TARDE)));
+        estacionamento3.addCliente(criarCliente("Cliente1C", "1C", new Turnista("Turnista", Turnos.TARDE)));
         estacionamento3.addCliente(criarCliente("Cliente2C", "2C", new Horista("Horista")));
 
         
@@ -54,7 +56,7 @@ public class Populador {
         return estacionamentos;
     }
 
-    private static Cliente criarCliente(String nome, String id, Turnista plano) {
+    private static Cliente criarCliente(String nome, String id, Plano plano) {
         Cliente cliente = new Cliente(nome, id, plano);
         Veiculo veiculo = new Veiculo(gerarPlacaAleatoria());
         cliente.addVeiculo(veiculo);

@@ -6,6 +6,7 @@ import java.time.Month;
 import java.util.LinkedList;
 import java.util.List;
 
+import business.Estacionamento.Relatorio;
 import business.Plano.Plano;
 import business.UsoDeVaga.UsoDeVaga;
 import business.UsoDeVaga.UsoDeVaga.ServicoAdicional;
@@ -22,6 +23,7 @@ import business.Vaga.Vaga;
 public class Veiculo implements Serializable {
     private String placa;
     private LinkedList<UsoDeVaga> usos;
+    private Relatorio Observador;
 
     /**
      * Construtor da classe Veiculo. Inicializa uma instância de veículo com a placa
@@ -170,5 +172,11 @@ public class Veiculo implements Serializable {
                 }
             }
         }
+    }
+    /*
+     * Método para notificar o observador (Classe relatorio)
+     */
+    public void notificar() {
+        // TODO Auto-generated method stub
     }
 }
