@@ -1,8 +1,9 @@
 package business.Plano;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public enum Turnos {
+public enum Turnos implements Serializable{
     MANHA("Manhã", LocalTime.of(8, 0), LocalTime.of(12, 0)),
     TARDE("Tarde", LocalTime.of(12, 1), LocalTime.of(18, 0)),
     NOITE("Noite", LocalTime.of(18, 1), LocalTime.of(23, 59));

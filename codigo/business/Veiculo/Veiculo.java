@@ -3,10 +3,12 @@ package business.Veiculo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
+import business.Interfaces.Observador;
 import business.Estacionamento.Relatorio;
+import business.Interfaces.Observavel;
 import business.Plano.Plano;
 import business.UsoDeVaga.UsoDeVaga;
 import business.UsoDeVaga.UsoDeVaga.ServicoAdicional;
@@ -20,10 +22,11 @@ import business.Vaga.Vaga;
  * 
  * @author @RenatoMAP77
  */
-public class Veiculo implements Serializable {
+public class Veiculo implements Serializable, Observavel {
     private String placa;
     private LinkedList<UsoDeVaga> usos;
-    private Relatorio Observador;
+    private List<Observador> relatorios;
+   
 
     /**
      * Construtor da classe Veiculo. Inicializa uma instância de veículo com a placa
@@ -34,6 +37,7 @@ public class Veiculo implements Serializable {
     public Veiculo(String placa) {
         setPlaca(placa);
         this.usos = new LinkedList<>();
+        this.relatorios = new ArrayList<>();
     }
 
     /**
@@ -107,7 +111,7 @@ public class Veiculo implements Serializable {
             LocalDateTime saida = LocalDateTime.now();
             valor = usoDeVaga.sair(saida,plano);
         }
-
+        notificarObservadores();
         return valor;
     }
 
@@ -173,10 +177,31 @@ public class Veiculo implements Serializable {
             }
         }
     }
-    /*
-     * Método para notificar o observador (Classe relatorio)
-     */
-    public void notificar() {
-        // TODO Auto-generated method stub
+    
+    @Override
+    public void addObservador(Observador observador) {
+        relatorios.add(observador);
+    }
+
+    @Override
+    public void removeObservador(Observador observador) {
+        relatorios.remove(observador);
+    }
+
+    @Override
+    public void notificarObservadores() {
+        for (Observador observador : relatorios) {
+            observador.update(LocalDateTime.now().getMonthValue());
+        }
+    }
+
+    public boolean isEstacionado() {
+        if (usos.size() > 0) {
+            UsoDeVaga usoDeVaga = usos.getLast();
+            if (usoDeVaga.getSaida() == null) {
+                return true;
+            }
+        }
+        return false;
     }
 }

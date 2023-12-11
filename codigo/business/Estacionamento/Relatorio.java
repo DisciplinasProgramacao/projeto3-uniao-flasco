@@ -1,43 +1,56 @@
 package business.Estacionamento;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Set;
 import business.Cliente.Cliente;
-import business.Veiculo.Veiculo;
 
-//Classe para utilizar o padrão observer, possui uma lista de objetos que estão sendo observados, e atualiza o seu
-//Método top5Clientes a cada vez que um veiculo sai do estacionamento
-public class Relatorio {
-    //LISTA PARA ARMAZENAR OS TOP 5 CLIENTES
-    // Fazer m map<mes, lista clientes>
-    private List<Cliente> top5Clientes;
-    //LISTA DE OBJETOS OBSERVADOS
-    private List<Veiculo> veiculosObservados;
+import business.Interfaces.Observador;
+import business.Interfaces.Observavel;
+
+public class Relatorio implements Serializable, Observador {
+    private Map<MesEnum, Set<Cliente>> top5Clientes;
+    private List<Observavel> veiculosObservados;
     private Estacionamento estacionamento;
 
-    public List<Cliente> getTop5Clientes() {
+    public Relatorio(Estacionamento estacionamento, Observavel observavel) {
+        this.estacionamento = estacionamento;
+        veiculosObservados = new ArrayList<>();
+        this.veiculosObservados.add(observavel);
+        observavel.addObservador(this);
+        top5Clientes = new HashMap<>();
+    }
+
+    public Map<MesEnum, Set<Cliente>> getTop5Clientes() {
         return top5Clientes;
     }
 
-    public void setTop5Clientes(List<Cliente> top5Clientes) {
+    public void setTop5Clientes(Map<MesEnum, Set<Cliente>> top5Clientes) {
         this.top5Clientes = top5Clientes;
     }
 
-    public List<Veiculo> getVeiculosObservados() {
+    public List<Observavel> getVeiculosObservados() {
         return veiculosObservados;
     }
 
-    public void setVeiculosObservados(List<Veiculo> veiculosObservados) {
+    public void setVeiculosObservados(List<Observavel> veiculosObservados) {
         this.veiculosObservados = veiculosObservados;
     }
 
-    public Relatorio(List<Cliente> top5Clientes, List<Veiculo> veiculosObservados) {
-        setTop5Clientes(top5Clientes);
-        setVeiculosObservados(veiculosObservados);
+    @Override
+    public void update(int mes) {
+        MesEnum mesEnum = MesEnum.fromInt(mes); 
+        
+        Set<Cliente> topClientes = estacionamento.top5Clientes(mesEnum);
+        top5Clientes.put(mesEnum, topClientes);
     }
-    //ARRUMAR ISSO
-    public void update(){
-        top5Clientes = Estacionamento.top5Clientes(0);
+
+    public Set<Cliente> getTop5ClientesNoMes(int mes){
+        MesEnum mesEnum = MesEnum.fromInt(mes); 
+        Set<Cliente> topClientes = top5Clientes.get(mesEnum);
+        return topClientes;
     }
-    
 }

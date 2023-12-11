@@ -10,6 +10,10 @@ import business.Plano.Plano;
 import business.Plano.Turnista;
 import business.Vaga.Vaga;
 
+/**
+ * Classe que representa o uso de uma vaga de estacionamento por um cliente.
+ * Controla a entrada, saída, serviços adicionais e cálculo do valor a ser pago pelo uso da vaga.
+ */
 public class UsoDeVaga implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final double FRACAO_USO = 0.25;
@@ -22,21 +26,21 @@ public class UsoDeVaga implements Serializable {
 	private List<ServicoAdicional> servicosAdicionais = new ArrayList<>();
 
 	/**
-	 * Construtor da classe UsoDeVaga.
-	 *
-	 * @param vaga    A vaga utilizada.
-	 * @param entrada A data e hora de entrada na vaga.
-	 */
+     * Construtor da classe UsoDeVaga.
+     *
+     * @param vaga    A vaga utilizada.
+     * @param entrada A data e hora de entrada na vaga.
+     */
 	public UsoDeVaga(Vaga vaga, LocalDateTime entrada) {
 		this.vaga = vaga;
 		this.entrada = entrada;
 	}
 
 	/**
-	 * Método para adicionar um serviço adicional ao uso da vaga.
-	 *
-	 * @param servico O serviço adicional a ser adicionado.
-	 */
+     * Método para adicionar um serviço adicional ao uso da vaga.
+     *
+     * @param servico O serviço adicional a ser adicionado.
+     */
 	public void adicionarServico(ServicoAdicional servico) {
 		this.servicosAdicionais.add(servico);
 	}
@@ -97,38 +101,83 @@ public class UsoDeVaga implements Serializable {
 		return valor;
 	}
 
+    /**
+     * Obtém a vaga utilizada no uso.
+     *
+     * @return A vaga utilizada.
+     */
     public Vaga getVaga() {
         return vaga;
     }
 
+    /**
+     * Define a vaga utilizada no uso.
+     *
+     * @param vaga A vaga a ser definida para o uso.
+     */
     public void setVaga(Vaga vaga) {
         this.vaga = vaga;
     }
 
+    /**
+     * Obtém a data e hora de entrada na vaga.
+     *
+     * @return A data e hora de entrada.
+     */
     public LocalDateTime getEntrada() {
         return entrada;
     }
 
+    /**
+     * Define a data e hora de entrada na vaga.
+     *
+     * @param entrada A data e hora de entrada a ser definida.
+     */
     public void setEntrada(LocalDateTime entrada) {
         this.entrada = entrada;
     }
 
+    /**
+     * Obtém a data e hora de saída da vaga.
+     *
+     * @return A data e hora de saída.
+     */
     public LocalDateTime getSaida() {
         return saida;
     }
 
+    /**
+     * Define a data e hora de saída da vaga.
+     *
+     * @param saida A data e hora de saída a ser definida.
+     */
     public void setSaida(LocalDateTime saida) {
         this.saida = saida;
     }
 
+    /**
+     * Obtém o valor pago pelo uso da vaga.
+     *
+     * @return O valor pago.
+     */
     public double getValorPago() {
         return valorPago;
     }
 
+    /**
+     * Define o valor pago pelo uso da vaga.
+     *
+     * @param valorPago O valor pago a ser definido.
+     */
     public void setValorPago(double valorPago) {
         this.valorPago = valorPago;
     }
 
+    /**
+     * Obtém a lista de serviços adicionais associados ao uso da vaga.
+     *
+     * @return A lista de serviços adicionais.
+     */
     public List<ServicoAdicional> getServicosAdicionais() {
         return servicosAdicionais;
     }

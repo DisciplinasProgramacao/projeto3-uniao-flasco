@@ -2,8 +2,9 @@ package business.Estacionamento;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import business.Cliente.Cliente;
@@ -20,6 +21,7 @@ public class Estacionamento implements Serializable {
     private List<Vaga> vagas;
     private int quantFileiras;
     private int vagasPorFileira;
+    private Relatorio relatorio;
 
     /**
      * Construtor que inicializa um estacionamento com nome, quantidade de fileiras, quantidade de vagas por fileira e ID.
@@ -38,6 +40,15 @@ public class Estacionamento implements Serializable {
         
         this.vagas = new ArrayList<>();
         gerarVagas();
+       
+    }
+
+    public Relatorio getRelatorio() {
+        return relatorio;
+    }
+
+    public void setRelatorio(Relatorio relatorio) {
+        this.relatorio = relatorio;
     }
 
     /**
@@ -183,27 +194,25 @@ public void estacionar (Veiculo veiculo){
     public double valorMedioPorUso() {
         
         return clientes.stream()
+                .filter(c -> c.getValorTotalArrecadado() != 0)
                 .mapToDouble(cliente -> cliente.getValorTotalArrecadado() / cliente.getTotalUsos())
                 .average()
                 .orElse(0.0);
     }
 
-    /**
-     * Retorna uma lista dos top 5 clientes que mais arrecadaram no mês especificado.
-     *
-     * @param mes O mês a ser consultado.
-     * @return Uma lista com os nomes dos top 5 clientes que mais arrecadaram.
-     */
-    public List<String> top5Clientes(int mes) {
-        Map<Cliente, Double> mapClientes = clientes.stream()
-                .collect(Collectors.toMap(c -> c, c -> c.getValorArrecadadoNoMes(mes)));
+   /**
+ * Retorna um conjunto dos top 5 clientes que mais arrecadaram no mês especificado.
+ *
+ * @param mes O mês a ser consultado.
+ * @return Um conjunto dos top 5 clientes que mais arrecadaram.
+ */
+public Set<Cliente> top5Clientes(MesEnum mes) {
+    return clientes.stream()
+            .sorted(Comparator.comparingDouble(c -> ((Cliente) c).getValorArrecadadoNoMes(mes.getMes())).reversed())
+            .limit(5)
+            .collect(Collectors.toSet());
+}
 
-        return mapClientes.entrySet().stream()
-                .sorted(Map.Entry.<Cliente, Double>comparingByValue().reversed())
-                .limit(5)
-                .map(e -> e.getKey().getNome())
-                .collect(Collectors.toList());
-    }
 
     /**
      * Verifica se um veículo com a placa especificada existe em algum dos clientes do estacionamento.
@@ -229,4 +238,15 @@ public void estacionar (Veiculo veiculo){
     public List<Cliente> getAllClientes() {
         return clientes;
     }
+   
+/**
+ * Verifica se um cliente com o ID fornecido já existe no estacionamento.
+ *
+ * @param idCliente O ID do cliente a ser verificado.
+ * @return true se o cliente com o ID fornecido existir, false caso contrário.
+ */
+public boolean clienteExiste(String idCliente) {
+    return getAllClientes().stream().anyMatch(cliente -> cliente.getId().equals(idCliente));
+}
+
 }
