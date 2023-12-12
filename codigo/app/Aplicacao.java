@@ -341,6 +341,7 @@ public static void estacionar(Scanner scanner) {
 // case 4: Sair Do Estacionamento com Carro
 public static void sairDoEstacionamento(Scanner scanner) {
     try {
+        scanner.nextLine();
         System.out.println("Informe a placa do carro que você deseja retirar do estacionamento: ");
         String placaVeiculo = scanner.nextLine();
 
@@ -378,9 +379,9 @@ public static void sairDoEstacionamento(Scanner scanner) {
 
   // case 5: Escolher serviços adicionais
   public static void servicosAdicionais(Scanner scanner) {
+      scanner.nextLine();
     System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
     String placa = scanner.nextLine();
-    scanner.nextLine();
 
     Veiculo veiculoDesejado = estacionamentos.stream()
             .filter(e -> e.getId() == estacionamentoUsado)
@@ -427,14 +428,15 @@ public static void sairDoEstacionamento(Scanner scanner) {
 
 // case 6: Gerar relatório do cliente
 public static void gerarRelatorioDoCliente(Scanner scanner) {
-    System.out.println("Digite o nome do cliente que deseja gerar o relatório: ");
-    String nomeCliente = scanner.nextLine();
+    scanner.nextLine();
+    System.out.println("Digite o id do cliente que deseja gerar o relatório: ");
+    String idcliente = scanner.nextLine();
     scanner.nextLine();
 
     Cliente clienteProcurado = estacionamentos.stream()
             .filter(e -> e.getId() == estacionamentoUsado)
             .flatMap(e -> e.getAllClientes().stream())
-            .filter(cliente -> nomeCliente.equals(cliente.getNome()))
+            .filter(c -> c.getId().equals(idcliente) )
             .findFirst()
             .orElse(null);
 

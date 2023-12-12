@@ -3,6 +3,7 @@ package business.Veiculo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -158,26 +159,34 @@ public class Veiculo implements Serializable, Observavel {
         return usos.size();
     }
 
-    public void relatorioDeUsoDeVagasVeiculo() {
-        int i = 0;
-        System.out.println("Placa: " + placa);
-        for (UsoDeVaga u : usos) {
-            System.out.println("Uso de vaga " + i++);
-            System.out.println("Vaga: " + u.getVaga().getId());
-            System.out.println("Entrada: " + u.getEntrada());
-            System.out.println("Saída: " + u.getSaida());
-            System.out.println("Valor pago: " + u.getValorPago());
+  public void relatorioDeUsoDeVagasVeiculo() {
+    int i = 0;
+    System.out.println("Placa: " + placa);
+    for (UsoDeVaga u : usos) {
+        System.out.println("Uso de vaga " + i++);
+        System.out.println("Vaga: " + u.getVaga().getId());
 
-            List<ServicoAdicional> servicos = u.getServicosAdicionais();
-            if (servicos.size() > 0) {
-                System.out.println("Serviços adicionais:");
-                for (ServicoAdicional servico : servicos) {
-                    System.out.println(servico);
-                }
+        LocalDateTime entrada = u.getEntrada();
+        System.out.println("Entrada: " + formatarDataHora(entrada));
+
+        LocalDateTime saida = u.getSaida();
+        System.out.println("Saída: " + (saida != null ? formatarDataHora(saida) : "Não saiu ainda"));
+
+        System.out.println("Valor pago: " + u.getValorPago());
+
+        List<ServicoAdicional> servicos = u.getServicosAdicionais();
+        if (servicos.size() > 0) {
+            System.out.println("Serviços adicionais:");
+            for (ServicoAdicional servico : servicos) {
+                System.out.println(servico);
             }
         }
     }
-    
+}
+
+private String formatarDataHora(LocalDateTime dateTime) {
+    return dateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+}
     @Override
     public void addObservador(Observador observador) {
         relatorios.add(observador);
