@@ -28,9 +28,21 @@ import business.Plano.Turnista;
 import business.Plano.Mensalista;
 import business.Plano.Turnos;
 
+/**
+ * Classe principal que representa a aplicação do sistema de gerenciamento de estacionamento.
+ * Possui métodos para controle das funcionalidades do estacionamento, como cadastro de clientes,
+ * adição de veículos, estacionamento, relatórios de arrecadação, entre outros.
+ */
 public class Aplicacao {
 
+    /**
+     * Lista de estacionamentos disponíveis no sistema.
+     */
     private static List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
+
+    /**
+     * Identificador do estacionamento atualmente em uso.
+     */
     private static int estacionamentoUsado;
     
 
@@ -42,6 +54,11 @@ public class Aplicacao {
         Aplicacao.estacionamentos = estacionamentos;
     }
     
+     /**
+     * Método que exibe o menu principal e controla as operações do sistema.
+     * @param scanner Objeto Scanner para entrada de dados.
+     * @param DAOe Objeto responsável pela persistência dos dados.
+     */
     public static void menu(Scanner scanner, GenericDAO DAOe) {
         int opcaoMenuPrincipal=0; 
         
@@ -527,6 +544,8 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
         }
         
     }
+    
+    // case 9: Gerar relatorio de arrecadacao dos estacionamentos
     public static void arrecadacaoEstacionamento(Scanner scanner) throws ExcecaoGeral {
         System.out.println("Escolha um relatório para ser gerado: ");
         System.out.println("1- Gerar relatório de arrecadação no mês.");
@@ -636,6 +655,8 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
         }
         
     }
+    
+    // case 12: Gerar relatorio top 5 clientes
     public static void geraRelatorioTop5Clientes(Scanner scanner) {
         System.out.println("Escolha o mês para visualizar o relatório (1 a 12)");
         int mes = scanner.nextInt();
@@ -652,7 +673,10 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
     }
     
 
-
+    /**
+     * Método principal que inicia a aplicação.
+     * @param args Argumentos da linha de comando.
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         GenericDAO DAOe;

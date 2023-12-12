@@ -18,8 +18,7 @@ import business.Vaga.Vaga;
 /**
  * A classe Veiculo representa um veículo com uma placa associada e um histórico
  * de usos de vagas. Cada veículo pertence a um cliente proprietário e pode
- * estacionar
- * em diferentes vagas durante o tempo.
+ * estacionar em diferentes vagas durante o tempo.
  * 
  * @author @RenatoMAP77
  */
@@ -159,6 +158,9 @@ public class Veiculo implements Serializable, Observavel {
         return usos.size();
     }
 
+    /**
+     * Gera um relatório de uso de vagas para o veículo.
+     */
   public void relatorioDeUsoDeVagasVeiculo() {
     int i = 0;
     System.out.println("Placa: " + placa);
@@ -184,19 +186,39 @@ public class Veiculo implements Serializable, Observavel {
     }
 }
 
+    /**
+     * Formata uma data e hora no formato específico para exibição.
+     *
+     * @param dateTime A data e hora a serem formatadas.
+     * @return A string formatada representando a data e hora.
+     */
 private String formatarDataHora(LocalDateTime dateTime) {
     return dateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
 }
+
+    /**
+     * Adiciona um observador para notificações sobre o veículo.
+     *
+     * @param observador O observador a ser adicionado.
+     */
     @Override
     public void addObservador(Observador observador) {
         relatorios.add(observador);
     }
 
+    /**
+     * Remove um observador do veículo.
+     *
+     * @param observador O observador a ser removido.
+     */
     @Override
     public void removeObservador(Observador observador) {
         relatorios.remove(observador);
     }
 
+    /**
+     * Notifica todos os observadores sobre alterações no veículo.
+     */
     @Override
     public void notificarObservadores() {
         for (Observador observador : relatorios) {
@@ -204,6 +226,11 @@ private String formatarDataHora(LocalDateTime dateTime) {
         }
     }
 
+    /**
+     * Verifica se o veículo está atualmente estacionado em uma vaga.
+     *
+     * @return Verdadeiro se o veículo estiver estacionado, falso caso contrário.
+     */
     public boolean isEstacionado() {
         if (usos.size() > 0) {
             UsoDeVaga usoDeVaga = usos.getLast();

@@ -137,10 +137,11 @@ public class Estacionamento implements Serializable {
 
 
     /**
-     * Realiza a operação de estacionar um veículo em uma vaga disponível.
-     *
-     * @param veiculo O veículo a ser estacionado.
-     */
+ * Realiza a operação de estacionar um veículo em uma vaga disponível no estacionamento.
+ *
+ * @param veiculo O veículo a ser estacionado.
+ * @throws RuntimeException Se não houver vaga disponível para estacionar o veículo.
+ */
 public void estacionar (Veiculo veiculo){
     Vaga vaga = vagas.stream().filter(v -> v.isDisponivel())
                       .findFirst()
@@ -151,13 +152,13 @@ public void estacionar (Veiculo veiculo){
         
     }
 
-    /**
-     * Realiza a operação de saída de um veículo do estacionamento e calcula o valor a ser pago com base no plano.
-     *
-     * @param veiculo O veículo a ser retirado do estacionamento.
-     * @param plano   O plano associado ao cliente.
-     * @return O valor a ser pago pela saída do veículo.
-     */
+   /**
+ * Realiza a operação de saída de um veículo do estacionamento e calcula o valor a ser pago com base no plano associado ao cliente.
+ *
+ * @param veiculo O veículo a ser retirado do estacionamento.
+ * @param plano   O plano associado ao cliente para cálculo do valor a ser pago.
+ * @return O valor a ser pago pela saída do veículo.
+ */
     public double sair(Veiculo veiculo,Plano plano) {
         double valor = veiculo.sair(plano);
         return valor;
@@ -200,11 +201,11 @@ public void estacionar (Veiculo veiculo){
                 .orElse(0.0);
     }
 
-   /**
+ /**
  * Retorna um conjunto dos top 5 clientes que mais arrecadaram no mês especificado.
  *
  * @param mes O mês a ser consultado.
- * @return Um conjunto dos top 5 clientes que mais arrecadaram.
+ * @return Um conjunto dos top 5 clientes que mais arrecadaram no mês.
  */
 public Set<Cliente> top5Clientes(MesEnum mes) {
     return clientes.stream()
@@ -215,11 +216,11 @@ public Set<Cliente> top5Clientes(MesEnum mes) {
 
 
     /**
-     * Verifica se um veículo com a placa especificada existe em algum dos clientes do estacionamento.
-     *
-     * @param placa A placa do veículo a ser verificada.
-     * @return true se o veículo com a placa fornecida existe em algum cliente, caso contrário, false.
-     */
+ * Verifica se um veículo com a placa especificada existe em algum dos clientes do estacionamento.
+ *
+ * @param placa A placa do veículo a ser verificada.
+ * @return true se o veículo com a placa fornecida existe em algum cliente, caso contrário, false.
+ */
     public boolean VeiculoExiste(String placa){
         for (Cliente cliente : clientes) {
             if (cliente.possuiVeiculo(placa) == true) {

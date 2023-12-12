@@ -1,7 +1,5 @@
 package business.Plano;
 
-
-
 /**
  * Representa um tipo de plano de estacionamento específico, derivado do plano Horista.
  * O plano Turnista é baseado em turnos específicos de utilização.

@@ -10,16 +10,23 @@ import java.util.List;
 import business.Interfaces.DAO;
 
 /**
- * Classe EstacionamentoDAO
+ * Classe responsável por realizar operações de persistência para objetos Estacionamento.
+ * Implementa a interface DAO para fornecer métodos de acesso aos dados.
  * 
- * @author RenatoMAP77
- *
+ * @param <Estacionamento> O tipo de objeto Estacionamento a ser persistido.
+ * @param <Integer>        O tipo de identificador para os objetos Estacionamento.
  */
 public class GenericDAO implements DAO<Estacionamento, Integer> {
     private File file;
     private FileOutputStream fos;
     private ObjectOutputStream outputFile;
 
+    /**
+     * Inicializa o GenericDAO com o nome do arquivo onde os dados serão armazenados.
+     *
+     * @param filename O nome do arquivo de armazenamento.
+     * @throws IOException Se houver erro na criação ou acesso ao arquivo.
+     */
     public GenericDAO(String filename) throws IOException {
         file = new File(filename);
         if (!file.exists()) {
@@ -30,6 +37,11 @@ public class GenericDAO implements DAO<Estacionamento, Integer> {
         outputFile = new ObjectOutputStream(fos);
     }
 
+    /**
+     * Adiciona um objeto Estacionamento ao arquivo de armazenamento.
+     *
+     * @param estacionamento O Estacionamento a ser adicionado.
+     */
     public void add(Estacionamento estacionamento) {
         try {
             outputFile.writeObject(estacionamento);
@@ -39,6 +51,12 @@ public class GenericDAO implements DAO<Estacionamento, Integer> {
         }
     }
 
+    /**
+     * Retorna um objeto Estacionamento com base na chave (ID) fornecida.
+     *
+     * @param chave A chave (ID) do Estacionamento a ser recuperado.
+     * @return O Estacionamento com a chave correspondente ou null se não encontrado.
+     */
     public Estacionamento get(Integer chave) {
         Estacionamento estacionamento = null;
 
@@ -57,6 +75,11 @@ public class GenericDAO implements DAO<Estacionamento, Integer> {
         return null;
     }
 
+    /**
+     * Retorna uma lista de todos os objetos Estacionamento armazenados no arquivo.
+     *
+     * @return Uma lista contendo todos os Estacionamentos no arquivo.
+     */
     public List<Estacionamento> getAll() {
         List<Estacionamento> estacionamentos = new ArrayList<>();
         Estacionamento estacionamento = null;
@@ -73,6 +96,11 @@ public class GenericDAO implements DAO<Estacionamento, Integer> {
         return estacionamentos;
     }
 
+    /**
+     * Atualiza um objeto Estacionamento no arquivo.
+     *
+     * @param e O Estacionamento a ser atualizado.
+     */
     public void update(Estacionamento e) {
         List<Estacionamento> estacionamentos = getAll();
         int index = estacionamentos.indexOf(e);
@@ -82,6 +110,11 @@ public class GenericDAO implements DAO<Estacionamento, Integer> {
         saveToFile(estacionamentos);
     }
 
+    /**
+     * Remove um objeto Estacionamento do arquivo.
+     *
+     * @param e O Estacionamento a ser removido.
+     */
     public void delete(Estacionamento e) {
         List<Estacionamento> estacionamentos = getAll();
         int index = estacionamentos.indexOf(e);
@@ -91,6 +124,11 @@ public class GenericDAO implements DAO<Estacionamento, Integer> {
         saveToFile(estacionamentos);
     }
 
+    /**
+     * Salva a lista atualizada de Estacionamentos no arquivo.
+     *
+     * @param estacionamentos A lista de Estacionamentos a ser salva.
+     */
     public void saveToFile(List<Estacionamento> estacionamentos) {
         try {
             close();
@@ -107,11 +145,21 @@ public class GenericDAO implements DAO<Estacionamento, Integer> {
         }
     }
     
+    /**
+     * Fecha o fluxo de saída de dados após a utilização do EstacionamentoDAO.
+     *
+     * @throws IOException Se houver erro ao fechar os fluxos de saída de dados.
+     */
     private void close() throws IOException {
         outputFile.close();
         fos.close();
     }
 
+    /**
+     * Método chamado automaticamente pelo Garbage Collector para fechar o EstacionamentoDAO.
+     *
+     * @throws Throwable Se houver erro ao finalizar o EstacionamentoDAO.
+     */
     @Override
     protected void finalize() throws Throwable {
         this.close();
