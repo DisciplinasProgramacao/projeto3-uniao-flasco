@@ -221,9 +221,7 @@ private String formatarDataHora(LocalDateTime dateTime) {
      */
     @Override
     public void notificarObservadores() {
-        for (Observador observador : relatorios) {
-            observador.update(LocalDateTime.now().getMonthValue());
-        }
+        relatorios.stream().forEach(observador -> observador.update(LocalDateTime.now().getMonthValue()));
     }
 
     /**
