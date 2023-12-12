@@ -1,54 +1,47 @@
 package teste;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-import business.Vaga.Vaga;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class VagaTest {
+class VagaTest {
 
     private Vaga vaga;
 
-    @Before
-    public void setUp() {
-        vaga = new Vaga(1, 5);
+    @BeforeEach
+    void setUp() {
+        vaga = new Vaga(1, 1); 
     }
 
     @Test
-    public void testConstrutor() {
-        assertEquals("A5", vaga.getId());
-        assertTrue(vaga.isDisponivel());
+    void testConstrutor() {
+        assertEquals("A1", vaga.getId(), "ID da vaga deve ser A1");
+        assertTrue(vaga.isDisponivel(), "Vaga deve estar disponível após a criação");
     }
 
     @Test
-    public void testSetDisponivel() {
+    void testSetDisponivel() {
         vaga.setDisponivel(false);
-        assertFalse(vaga.isDisponivel());
+        assertFalse(vaga.isDisponivel(), "Vaga deve estar indisponível");
+
+        vaga.setDisponivel(true);
+        assertTrue(vaga.isDisponivel(), "Vaga deve estar disponível");
     }
 
     @Test
-    public void testEstacionarVeiculoQuandoDisponivel() {
-        assertTrue(vaga.estacionar("ABC1234"));
-        assertFalse(vaga.isDisponivel());
+    void testEstacionar() {
+        assertTrue(vaga.estacionar("ABC1234"), "Deve ser possível estacionar se a vaga estiver disponível");
+        assertFalse(vaga.isDisponivel(), "Vaga deve estar ocupada após estacionar");
+
+        assertFalse(vaga.estacionar("XYZ5678"), "Não deve ser possível estacionar se a vaga já estiver ocupada");
     }
 
     @Test
-    public void testEstacionarVeiculoQuandoIndisponivel() {
+    void testSair() {
         vaga.estacionar("ABC1234");
-        assertFalse(vaga.estacionar("XYZ5678"));
-    }
-
-    @Test
-    public void testSairQuandoVagaOcupada() {
-        vaga.estacionar("ABC1234");
-        assertTrue(vaga.sair());
-        assertTrue(vaga.isDisponivel());
-    }
-
-    @Test
-    public void testSairQuandoVagaJaEstaDisponivel() {
-        assertFalse(vaga.sair());
+        assertTrue(vaga.sair(), "Deve ser possível sair se a vaga estiver ocupada");
+        assertTrue(vaga.isDisponivel(), "Vaga deve estar disponível após sair");
+        assertFalse(vaga.sair(), "Não deve ser possível sair se a vaga já estiver vazia");
     }
 }
+
