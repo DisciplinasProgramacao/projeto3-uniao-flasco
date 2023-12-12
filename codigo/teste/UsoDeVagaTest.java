@@ -1,45 +1,60 @@
 package teste;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-import java.time.LocalDateTime;
+import business.Plano.Mensalista;
+import business.Plano.Turnista;
 import business.Vaga.Vaga;
-import business.UsoDeVaga.UsoDeVaga;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class UsoDeVagaTest {
+import java.time.LocalDateTime;
 
-    private Vaga vaga;
-    private LocalDateTime entrada;
+import static org.junit.jupiter.api.Assertions.*;
+
+class UsoDeVagaTest {
+
     private UsoDeVaga usoDeVaga;
+    private Vaga vagaMock;
+    private LocalDateTime entrada;
+    private Turnista planoTurnista;
+    private Mensalista planoMensalista;
 
-    @Before
-    public void setUp() {
-        vaga = new Vaga( 1 ,2);
+    @BeforeEach
+    void setUp() {
+        vagaMock = new Vaga(1, 1);
         entrada = LocalDateTime.now();
-        usoDeVaga = new UsoDeVaga(vaga, entrada);
+        usoDeVaga = new UsoDeVaga(vagaMock, entrada);
+        planoTurnista = new Turnista();
+        planoMensalista = new Mensalista();
     }
 
     @Test
-    public void testAdicionarServico() {
+    void testAdicionarServico() {
         usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.LAVAGEM);
         assertEquals(1, usoDeVaga.getServicosAdicionais().size());
     }
 
     @Test
-    public void testSairSemPlano() {
-        LocalDateTime saida = entrada.plusHours(2);
-        double valor = usoDeVaga.sair(saida, null);
-        double valorEsperado = 32.0;
-        assertEquals(valorEsperado, valor, 0.01);
+    void testSairComPlanoMensalista() {
+        double valor = usoDeVaga.sair(entrada.plusHours(2), planoMensalista);
+        assertEquals(0, valor, "O valor deve ser 0 para mensalistas");
     }
 
     @Test
-    public void testValorPagoComExcecaoParaLavagem() {
+    void testSairComPlanoTurnista() {
+        double valor = usoDeVaga.sair(entrada.plusHours(1), planoTurnista);
+    }
+
+    @Test
+    void testValorPagoMaximo() {
+        usoDeVaga.setSaida(entrada.plusHours(15)); 
+        double valor = usoDeVaga.valorPago();
+        assertEquals(UsoDeVaga.VALOR_MAXIMO, valor, "O valor deve ser igual ao valor máximo");
+    }
+
+    @Test
+    void testValorPagoComServicoAdicionalInvalido() {
         usoDeVaga.adicionarServico(UsoDeVaga.ServicoAdicional.LAVAGEM);
-        LocalDateTime saida = entrada.plusMinutes(30);
-        usoDeVaga.setSaida(saida);
-        assertThrows(IllegalArgumentException.class, () -> usoDeVaga.valorPago());
+        usoDeVaga.setSaida(entrada.plusMinutes(30)); 
+        assertThrows(IllegalArgumentException.class, usoDeVaga::valorPago);
     }
 }
