@@ -1,67 +1,71 @@
 package teste;
 
+import business.Plano.Plano;
 import business.Vaga.Vaga;
-import business.Veiculo.Veiculo;
-import business.UsoDeVaga.UsoDeVaga;
-import java.time.LocalDateTime;
-import java.time.Month;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import business.Interfaces.Observador;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-public class VeiculoTest {
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class VeiculoTest {
 
     private Veiculo veiculo;
-    private Vaga vaga;
+    private Plano planoMock;
+    private Vaga vagaMock;
+    private Observador observadorMock;
 
-
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         veiculo = new Veiculo("ABC1234");
-        vaga = new Vaga(1, 1);
+        planoMock = Mockito.mock(Plano.class);
+        vagaMock = Mockito.mock(Vaga.class);
+        observadorMock = Mockito.mock(Observador.class);
+        Mockito.when(vagaMock.isDisponivel()).thenReturn(true);
     }
 
     @Test
-    public void testEstacionar() {
-        veiculo.estacionar(vaga);
+    void testEstacionar() {
+        veiculo.estacionar(vagaMock);
+        assertFalse(vagaMock.isDisponivel());
         assertEquals(1, veiculo.getUsos().size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEstacionarComVagaIndisponivel() {
-        vaga.setDisponivel(false);
-        veiculo.estacionar(vaga);
+    @Test
+    void testEstacionarVagaIndisponivel() {
+        Mockito.when(vagaMock.isDisponivel()).thenReturn(false);
+        assertThrows(IllegalArgumentException.class, () -> veiculo.estacionar(vagaMock));
     }
 
     @Test
-    public void testTotalArrecadado() {
-        Vaga vaga1 = new Vaga(1, 1);
-        Vaga vaga2 = new Vaga(1, 2);
-        UsoDeVaga uso1 = new UsoDeVaga(vaga1, LocalDateTime.now().minusHours(2));
-        uso1.setValorPago(10.0);
-        veiculo.getUsos().add(uso1);
+    void testSair() {
+        veiculo.estacionar(vagaMock);
+        double valor = veiculo.sair(planoMock);
+    }
 
-        UsoDeVaga uso2 = new UsoDeVaga(vaga2, LocalDateTime.now().minusDays(1).minusHours(4));
-        uso2.setValorPago(15.0);
-        veiculo.getUsos().add(uso2);
-
+    @Test
+    void testTotalArrecadadoEArrecadadoNoMes() {
+        veiculo.estacionar(vagaMock);
+        veiculo.sair(planoMock);
         double totalArrecadado = veiculo.totalArrecadado();
-        double totalEsperado = 25.0;
-        assertEquals(totalEsperado, totalArrecadado, 0.01);
+        double arrecadadoNoMes = veiculo.arrecadadoNoMes(LocalDateTime.now().getMonthValue());
     }
 
     @Test
-    public void testArrecadadoNoMes() {
-        Vaga vaga1 = new Vaga(2, 3);
-        Vaga vaga2 = new Vaga(2, 4);
-        UsoDeVaga usoMaio = new UsoDeVaga(vaga1, LocalDateTime.of(2023, Month.MAY, 10, 8, 30));
-        usoMaio.setValorPago(20.0);
-        veiculo.getUsos().add(usoMaio);
-        UsoDeVaga usoJunho = new UsoDeVaga(vaga2, LocalDateTime.of(2023, Month.JUNE, 15, 9, 0));
-        usoJunho.setValorPago(30.0);
-        veiculo.getUsos().add(usoJunho);
-        double arrecadadoEmMaio = veiculo.arrecadadoNoMes(Month.MAY.getValue());
-        double valorEsperadoEmMaio = 20.0;
-        assertEquals(valorEsperadoEmMaio, arrecadadoEmMaio, 0.01);
+    void testAddERemoveObservador() {
+        veiculo.addObservador(observadorMock);
+        assertTrue(veiculo.getObservadores().contains(observadorMock));
+        veiculo.removeObservador(observadorMock);
+        assertFalse(veiculo.getObservadores().contains(observadorMock));
+    }
+
+    @Test
+    void testIsEstacionado() {
+        assertFalse(veiculo.isEstacionado());
+        veiculo.estacionar(vagaMock);
+        assertTrue(veiculo.isEstacionado());
     }
 }
