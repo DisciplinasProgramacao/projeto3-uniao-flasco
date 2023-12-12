@@ -1,65 +1,86 @@
 package teste;
 
-import business.Plano.Horista;
-import business.Plano.Mensalista;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.beans.Transient;
-
-import business.Estacionamento.Estacionamento;
 import business.Cliente.Cliente;
 import business.Plano.Plano;
+import business.Vaga.Vaga;
 import business.Veiculo.Veiculo;
-import business.Plano.Mensalista;;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EstacionamentoTest {
 
     private Estacionamento estacionamento;
+    private Cliente clienteMock;
+    private Veiculo veiculoMock;
+    private Plano planoMock;
+    private Vaga vagaMock;
 
     @BeforeEach
     void setUp() {
-        estacionamento = new Estacionamento("Estacionamento Teste", 5, 10, 1);
+        estacionamento = new Estacionamento("Estacionamento Teste", 3, 10, 1);
+        clienteMock = Mockito.mock(Cliente.class);
+        veiculoMock = Mockito.mock(Veiculo.class);
+        planoMock = Mockito.mock(Plano.class);
+        vagaMock = Mockito.mock(Vaga.class);
     }
 
     @Test
-    void testAddVeiculo(){
-        Veiculo veic = new Veiculo("ABC1234");
-        Cliente cliente = new Cliente("Teste", "1", null);
-        estacionamento.addCliente(cliente);
-
-        estacionamento.addVeiculo(veic, "1");
-
-        assertEquals(cliente.getVeiculos().size(), 1);
-    }
-
-    @Test 
-    void testEstacionar(){
-        Veiculo veiculo = new Veiculo("ABC1234");
-        estacionamento.estacionar(veiculo);
-        assertTrue(veiculo.isEstacionado());
+    void testAdicionarEObterClientes() {
+        estacionamento.addCliente(clienteMock);
+        assertEquals(1, estacionamento.getAllClientes().size(), "Deve ter 1 cliente adicionado");
     }
 
     @Test
-    void sair(){
-        Veiculo veiculo = new Veiculo("ABC1234");
-        Mensalista mensalista = new Mensalista("Mensalista");
-        estacionamento.estacionar(veiculo);
-        
-        assertEquals(estacionamento.sair(veiculo, mensalista),0);
+    void testClienteExiste() {
+        Mockito.when(clienteMock.getId()).thenReturn("123");
+        estacionamento.addCliente(clienteMock);
+        assertTrue(estacionamento.clienteExiste("123"), "O cliente com ID '123' deve existir");
+        assertFalse(estacionamento.clienteExiste("999"), "O cliente com ID '999' não deve existir");
     }
+
     @Test
-    void testTotalArrecadado(){
-        Cliente cliente = new Cliente(null, null, null);
-        estacionamento.addCliente(cliente);
-        assertEquals(estacionamento.totalArrecadado(),0);
+    void testAdicionarVeiculoACliente() {
+        Mockito.when(clienteMock.getId()).thenReturn("123");
+        estacionamento.addCliente(clienteMock);
+        estacionamento.addVeiculo(veiculoMock, "123");
+        Mockito.verify(clienteMock).addVeiculo(veiculoMock);
     }
+
     @Test
-    void testArrecadadoNoMes(){
-        Cliente cliente = new Cliente(null, null, null);
-        estacionamento.addCliente(cliente);
-        assertEquals(estacionamento.arrecadadoNoMes(1),0);
+    void testEstacionarVeiculo() {
+        Mockito.when(vagaMock.isDisponivel()).thenReturn(true);
+        estacionamento.estacionar(veiculoMock);
+        Mockito.verify(veiculoMock).estacionar(Mockito.any(Vaga.class));
+    }
+
+    @Test
+    void testSairDoEstacionamento() {
+        Mockito.when(veiculoMock.sair(planoMock)).thenReturn(100.0);
+        double valorPago = estacionamento.sair(veiculoMock, planoMock);
+        assertEquals(100.0, valorPago, "O valor pago deve ser 100.0");
+    }
+
+    @Test
+    void testTotalArrecadado() {
+        Mockito.when(clienteMock.getValorTotalArrecadado()).thenReturn(200.0);
+        estacionamento.addCliente(clienteMock);
+        assertEquals(200.0, estacionamento.totalArrecadado(), "O total arrecadado deve ser 200.0");
+    }
+
+    @Test
+    void testArrecadadoNoMes() {
+        Mockito.when(clienteMock.getValorArrecadadoNoMes(5)).thenReturn(150.0);
+        estacionamento.addCliente(clienteMock);
+        assertEquals(150.0, estacionamento.arrecadadoNoMes(5), "O valor arrecadado no mês 5 deve ser 150.0");
+    }
+
+    @Test
+    void testVeiculoExiste() {
+        Mockito.when(clienteMock.possuiVeiculo("ABC123")).thenReturn(true);
+        estacionamento.addCliente(clienteMock);
+        assertTrue(estacionamento.VeiculoExiste("ABC123"), "O veículo com placa 'ABC123' deve existir");
+        assertFalse(estacionamento.VeiculoExiste("XYZ789"), "O veículo com placa 'XYZ789' não deve existir");
     }
 }
