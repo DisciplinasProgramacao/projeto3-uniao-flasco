@@ -1,76 +1,81 @@
 package teste;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.junit.Before;
-import org.junit.Test;
-import business.Cliente.Cliente;
 import business.Plano.Plano;
 import business.Veiculo.Veiculo;
-import business.UsoDeVaga.UsoDeVaga;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ClienteTest {
+class ClienteTest {
 
     private Cliente cliente;
-    private Plano plano;
-    private Veiculo veiculo;
+    private Veiculo veiculoMock;
+    private Plano planoMock;
 
-    @Before
-    public void setUp() {
-        cliente = new Cliente("João", "123", plano);
-        veiculo = new Veiculo("ABC1234");
+    @BeforeEach
+    void setUp() {
+        planoMock = Mockito.mock(Plano.class);
+        veiculoMock = Mockito.mock(Veiculo.class);
+        cliente = new Cliente("Cliente Teste", "123", planoMock);
     }
 
     @Test
-    public void testClienteCreation() {
-        assertEquals("João", cliente.getNome());
-        assertEquals("123", cliente.getId());
-        assertEquals(plano, cliente.getPlano());
+    void testAdicionarEObterVeiculos() {
+        cliente.addVeiculo(veiculoMock);
+        assertEquals(1, cliente.getVeiculos().size());
+        assertTrue(cliente.getVeiculos().contains(veiculoMock));
     }
 
     @Test
-    public void testSetNome() {
-        cliente.setNome("Maria");
-        assertEquals("Maria", cliente.getNome());
-    }
-
-    @Test
-    public void testAddVeiculo() {
-        cliente.addVeiculo(veiculo);
-        assertTrue(cliente.getVeiculos().contains(veiculo));
-    }
-
-    @Test
-    public void testPossuiVeiculo() {
-        cliente.addVeiculo(veiculo);
+    void testPossuiVeiculo() {
+        Mockito.when(veiculoMock.getPlaca()).thenReturn("ABC1234");
+        cliente.addVeiculo(veiculoMock);
         assertTrue(cliente.possuiVeiculo("ABC1234"));
-        assertFalse(cliente.possuiVeiculo("XYZ5678"));
+        assertFalse(cliente.possuiVeiculo("XYZ9876"));
     }
 
     @Test
     void testGetTotalUsos() {
-        int totalUsos = cliente.getTotalUsos();
-        assertEquals(0,totalUsos);
-
-        List<UsoDeVaga> usos = new ArrayList<UsoDeVaga>();
-        UsoDeVaga uso = new UsoDeVaga(null, null);
-        usos.add(uso);
-        veiculo.setUsos(usos);
-        assertEquals(1,totalUsos);
+        Mockito.when(veiculoMock.totalDeUsos()).thenReturn(5);
+        cliente.addVeiculo(veiculoMock);
+        assertEquals(5, cliente.getTotalUsos());
     }
 
     @Test
-    void testGetValorArrecadado(){
-        List<UsoDeVaga> usos = new ArrayList<UsoDeVaga>();
-        UsoDeVaga uso = new UsoDeVaga(null, null);
-        usos.add(uso);
-        veiculo.setUsos(usos);
+    void testGetValorArrecadado() {
+        Mockito.when(veiculoMock.getPlaca()).thenReturn("ABC1234");
+        Mockito.when(veiculoMock.totalArrecadado()).thenReturn(1000.0);
+        cliente.addVeiculo(veiculoMock);
+        assertEquals(1000.0, cliente.getValorArrecadado("ABC1234"));
+        assertEquals(0.0, cliente.getValorArrecadado("XYZ9876"));
+    }
 
-        assertEquals(0, cliente.getValorArrecadado(null));
-        assertEquals(0, cliente.getValorArrecadado("ABC1234"));
+    @Test
+    void testGetValorTotalArrecadado() {
+        Mockito.when(veiculoMock.totalArrecadado()).thenReturn(500.0);
+        cliente.addVeiculo(veiculoMock);
+        cliente.addVeiculo(veiculoMock);
+        assertEquals(1000.0, cliente.getValorTotalArrecadado());
+    }
+
+    @Test
+    void testGetValorArrecadadoNoMes() {
+        Mockito.when(veiculoMock.arrecadadoNoMes(1)).thenReturn(200.0);
+        cliente.addVeiculo(veiculoMock);
+        assertEquals(200.0, cliente.getValorArrecadadoNoMes(1));
+    }
+
+    @Test
+    void testSettersAndGetters() {
+        cliente.setNome("Novo Nome");
+        assertEquals("Novo Nome", cliente.getNome());
+
+        cliente.setId("456");
+        assertEquals("456", cliente.getId());
+
+        Plano outroPlano = Mockito.mock(Plano.class);
+        cliente.setPlano(outroPlano);
+        assertEquals(outroPlano, cliente.getPlano());
     }
 }
-
