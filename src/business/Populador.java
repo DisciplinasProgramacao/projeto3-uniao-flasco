@@ -42,7 +42,7 @@ public class Populador {
         for (Estacionamento estacionamento : estacionamentos) {
             for (int i = 1; i <= 3; i++) {
                 Plano plano = null;
-                Veiculo veiculo = null; // Inicializa a variável veiculo
+                Veiculo veiculo = null; 
         
                 switch (i) {
                     case 1:
@@ -58,11 +58,11 @@ public class Populador {
         
                 Cliente cliente = new Cliente("Cliente" + i + estacionamento.getNome(), i + estacionamento.getNome(), plano);
         
-                // Cria o veículo antes de associá-lo ao cliente
+                
                 veiculo = criarVeiculo();
                 cliente.addVeiculo(veiculo);
         
-                // Cria o relatório após a criação do veículo
+               
                 Relatorio relatorioEstacionamento = new Relatorio(estacionamento, veiculo);
                 estacionamento.setRelatorio(relatorioEstacionamento);
         

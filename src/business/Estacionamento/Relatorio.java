@@ -3,6 +3,7 @@ package business.Estacionamento;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,7 +89,6 @@ public class Relatorio implements Serializable, Observador {
     @Override
     public void update(int mes) {
         MesEnum mesEnum = MesEnum.fromInt(mes); 
-        
         Set<Cliente> topClientes = estacionamento.top5Clientes(mesEnum);
         top5Clientes.put(mesEnum, topClientes);
     }

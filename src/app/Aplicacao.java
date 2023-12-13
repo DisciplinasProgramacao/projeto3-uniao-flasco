@@ -399,9 +399,9 @@ public static void sairDoEstacionamento(Scanner scanner) {
 
   // case 5: Escolher serviços adicionais
   public static void servicosAdicionais(Scanner scanner) {
+      scanner.nextLine();
       System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
       String placa = scanner.nextLine();
-      scanner.nextLine();
 
     Veiculo veiculoDesejado = estacionamentos.stream()
             .filter(e -> e.getId() == estacionamentoUsado)
