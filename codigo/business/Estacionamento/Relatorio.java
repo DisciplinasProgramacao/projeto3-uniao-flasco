@@ -11,6 +11,7 @@ import business.Cliente.Cliente;
 import business.Interfaces.Observador;
 import business.Interfaces.Observavel;
 
+
 /**
  * Classe Relatório para gerenciamento e armazenamento de dados estatísticos do estacionamento.
  */
@@ -50,6 +51,16 @@ public class Relatorio implements Serializable, Observador {
     public void setTop5Clientes(Map<MesEnum, Set<Cliente>> top5Clientes) {
         this.top5Clientes = top5Clientes;
     }
+    @Override
+    public void setObservavel(Observavel v){
+        this.veiculosObservados.add(v);
+        v.addObservador(this);
+    }
+    @Override
+    public void removeObservavel(Observavel v){
+        this.veiculosObservados.remove(v);
+        v.removeObservador(this);
+    }
 
     /**
      * Obtém a lista de objetos observáveis (veículos).
@@ -65,7 +76,7 @@ public class Relatorio implements Serializable, Observador {
      *
      * @param veiculosObservados A lista de objetos observáveis (veículos).
      */
-    public void setVeiculosObservados(List<Observavel> veiculosObservados) {
+    public void setObservaveis(List<Observavel> veiculosObservados) {
         this.veiculosObservados = veiculosObservados;
     }
 

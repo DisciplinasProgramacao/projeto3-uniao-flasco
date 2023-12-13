@@ -1,12 +1,12 @@
 package business.Plano;
 
-import java.io.Serializable;
+
 
 /**
  * Representa o plano de estacionamento mensalista.
  * Herda da classe abstrata Plano.
  */
-public class Mensalista extends Plano implements Serializable {
+public class Mensalista extends Plano {
 
     /**
      * Construtor que permite definir o tipo de plano.

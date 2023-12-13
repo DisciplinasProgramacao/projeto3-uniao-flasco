@@ -11,5 +11,9 @@ public interface Observador {
      * @param mes O mês associado à atualização.
      */
     public void update(int mes);
+    
+    public void setObservavel(Observavel v);
+
+    public void removeObservavel(Observavel v);
 }
 

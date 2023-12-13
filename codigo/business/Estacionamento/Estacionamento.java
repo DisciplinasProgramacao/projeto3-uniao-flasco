@@ -112,6 +112,7 @@ public class Estacionamento implements Serializable {
                 return;
             }
         }
+        relatorio.setObservavel(veiculo);
         System.out.println("Cliente não encontrado!");
     }
 
