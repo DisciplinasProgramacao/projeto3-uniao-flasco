@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -174,7 +175,7 @@ public class Aplicacao {
             } catch (ExcecaoGeral e) {
                 System.out.println(e.getCodigoErro());
             }
-                arrecadacaoMediaHoristas(scanner);
+                
                 break;
             case 11:
                 try {
@@ -191,6 +192,8 @@ public class Aplicacao {
                 } catch (ExcecaoGeral e) {
                     System.out.println(e.getCodigoErro());
                 }
+
+                break;
             case 13:
             opcaoMenuPrincipal = 13;
             break;
@@ -396,9 +399,9 @@ public static void sairDoEstacionamento(Scanner scanner) {
 
   // case 5: Escolher serviços adicionais
   public static void servicosAdicionais(Scanner scanner) {
+      System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
+      String placa = scanner.nextLine();
       scanner.nextLine();
-    System.out.println("Informe a placa do carro ao qual você deseja adicionar serviços: ");
-    String placa = scanner.nextLine();
 
     Veiculo veiculoDesejado = estacionamentos.stream()
             .filter(e -> e.getId() == estacionamentoUsado)
@@ -421,9 +424,9 @@ public static void sairDoEstacionamento(Scanner scanner) {
         index++;
     }
 
+    scanner.nextLine();
     System.out.println("Digite o número do serviço desejado (ou 0 para voltar):");
     int escolha = scanner.nextInt();
-    scanner.nextLine();
 
     if (escolha > 0 && escolha <= UsoDeVaga.ServicoAdicional.values().length) {
         UsoDeVaga.ServicoAdicional servicoEscolhido = UsoDeVaga.ServicoAdicional.values()[escolha - 1];
@@ -660,15 +663,21 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
     public static void geraRelatorioTop5Clientes(Scanner scanner) {
         System.out.println("Escolha o mês para visualizar o relatório (1 a 12)");
         int mes = scanner.nextInt();
-    
-        Set<Cliente> top5Clientes = estacionamentos.stream()
-            .filter(e -> e.getId() == estacionamentoUsado)
-            .flatMap(e -> e.getRelatorio().getTop5ClientesNoMes(mes).stream())
-            .collect(Collectors.toSet());
+        MesEnum mesEnum = MesEnum.fromInt(mes);
+        Set<Cliente> top5Clientes = new HashSet<>();
+        for (Estacionamento estacionamento : estacionamentos) {
+            if (estacionamento.getId() == estacionamentoUsado) {
+              top5Clientes=  estacionamento.getRelatorio().getTop5ClientesNoMes(mesEnum.getMes());
+                break;
+
+            }
+            
+        }
     
         System.out.println("Top 5 Clientes no mês " + mes + ":");
         for (Cliente cliente : top5Clientes) {
-            System.out.println("Cliente: " + cliente.getNome() + ", ID: "+ cliente.getId());
+            System.out.println("Cliente: " + cliente.getNome() + ", ID: "+ cliente.getId()+ ", Valor arrecadado: "+
+            cliente.getValorArrecadadoNoMes(mes));
         }
     }
     
