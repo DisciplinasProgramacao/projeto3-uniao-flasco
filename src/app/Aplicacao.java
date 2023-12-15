@@ -40,6 +40,9 @@ public class Aplicacao {
      * Lista de estacionamentos disponíveis no sistema.
      */
     private static List<Estacionamento> estacionamentos = new ArrayList<Estacionamento>();
+    //Comente a função abaixo
+
+    private static GenericDAO<Estacionamento> dao = new GenericDAO<>();
 
     /**
      * Identificador do estacionamento atualmente em uso.
@@ -58,9 +61,9 @@ public class Aplicacao {
      /**
      * Método que exibe o menu principal e controla as operações do sistema.
      * @param scanner Objeto Scanner para entrada de dados.
-     * @param DAOe Objeto responsável pela persistência dos dados.
+     * @param dao Objeto responsável pela persistência dos dados.
      */
-    public static void menu(Scanner scanner, GenericDAO DAOe) {
+    public static void menu(Scanner scanner, GenericDAO dao) {
         int opcaoMenuPrincipal=0; 
         
         do{
@@ -201,11 +204,11 @@ public class Aplicacao {
                 System.out.println("Opção inválida. Tente novamente.");
                 break;
             }
-            DAOe.saveToFile(estacionamentos);
+            dao.atualizarDados(estacionamentos);
     }while(opcaoMenuPrincipal!=13);
 
      System.out.println("Saindo do programa.");
-                DAOe.saveToFile(estacionamentos);
+                dao.atualizarDados(estacionamentos);
                 System.exit(0);
     }
 
@@ -688,18 +691,18 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        GenericDAO DAOe;
+      
 
         try {
-            DAOe = new GenericDAO("Estacionamento.dat");
-            estacionamentos = DAOe.getAll();
+            
+            estacionamentos = dao.getAll();
 
             if (estacionamentos == null || estacionamentos.isEmpty()) {
                 estacionamentos = new ArrayList<>();
                 estacionamentos.addAll(Populador.popularEstacionamentos());
-                DAOe.saveToFile(estacionamentos);
+                dao.atualizarDados(estacionamentos);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Erro ao criar o DAO: " + e.getMessage());
             scanner.close();
             return;
@@ -723,10 +726,10 @@ public static void gerarRelatorioUsoDeVaga(String placa) throws ExcecaoGeral {
             }
         }
 
-        menu(scanner, DAOe);
+        menu(scanner, dao);
 
         // Salvar estacionamentos ao sair do programa
-        DAOe.saveToFile(estacionamentos);
+        dao.atualizarDados(estacionamentos);
 
         scanner.close();
     }

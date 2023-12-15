@@ -14,17 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/** Classe para retornar Objetos pré-prontos do sistema, sendo eles:
-   * - 3 Estacionamentos
-   * - 9 Clientes (3 para cada plano, cada estacionamento possui 3 clientes)
-   * - 9 Veiculos (um para cada cliente)
-*/
+/**
+ * Classe Populador para gerar dados iniciais do sistema de estacionamento.
+ * Gera estacionamentos, clientes e veículos com uso pré-definido.
+ */
 public class Populador {
 
-     /**
-     * Método para popular a lista de estacionamentos com dados pré-definidos.
+    /**
+     * Gera e retorna uma lista de estacionamentos com clientes e veículos pré-definidos.
+     * Inclui a lógica para relatórios de cada estacionamento.
      *
-     * @return Uma lista contendo estacionamentos pré-definidos.
+     * @return Uma lista de estacionamentos pré-definidos.
      */
     public static List<Estacionamento> popularEstacionamentos() {
         List<Estacionamento> estacionamentos = new ArrayList<>();
@@ -34,66 +34,79 @@ public class Populador {
         Estacionamento estacionamento2 = new Estacionamento("Estacionamento B", 4, 8, 2);
         Estacionamento estacionamento3 = new Estacionamento("Estacionamento C", 6, 12, 3);
 
-        // Adição dos estacionamentos à lista
         estacionamentos.add(estacionamento1);
         estacionamentos.add(estacionamento2);
         estacionamentos.add(estacionamento3);
 
         for (Estacionamento estacionamento : estacionamentos) {
+            Veiculo veiculoInicial = new Veiculo("STARTER");
+            Relatorio relatorioEstacionamento = new Relatorio(estacionamento, veiculoInicial);
+
             for (int i = 1; i <= 3; i++) {
-                Plano plano = null;
-                Veiculo veiculo = null; 
-        
-                switch (i) {
-                    case 1:
-                        plano = new Mensalista("Mensalista");
-                        break;
-                    case 2:
-                        plano = new Turnista("Turnista", Turnos.MANHA);
-                        break;
-                    case 3:
-                        plano = new Horista("Horista");
-                        break;
-                }
-        
+                Plano plano = selecionarPlano(i);
                 Cliente cliente = new Cliente("Cliente" + i + estacionamento.getNome(), i + estacionamento.getNome(), plano);
-        
                 
-                veiculo = criarVeiculo();
+                Veiculo veiculo = criarVeiculo();
                 cliente.addVeiculo(veiculo);
-        
-               
-                Relatorio relatorioEstacionamento = new Relatorio(estacionamento, veiculo);
-                estacionamento.setRelatorio(relatorioEstacionamento);
-        
-                estacionamento.addCliente(cliente);
+
+                relatorioEstacionamento.setObservavel(veiculo);
+
                 estacionamento.estacionar(veiculo);
+                estacionamento.sair(veiculo, plano);
+
+                estacionamento.addCliente(cliente);
             }
+
+            estacionamento.setRelatorio(relatorioEstacionamento);
         }
 
         return estacionamentos;
     }
 
+    /**
+     * Seleciona um plano com base em um índice.
+     *
+     * @param index Índice para selecionar o plano.
+     * @return O plano selecionado.
+     */
+    private static Plano selecionarPlano(int index) {
+        switch (index) {
+            case 1:
+                return new Mensalista("Mensalista");
+            case 2:
+                return new Turnista("Turnista", Turnos.MANHA);
+            case 3:
+                return new Horista("Horista");
+            default:
+                throw new IllegalArgumentException("Índice de plano inválido.");
+        }
+    }
+
+    /**
+     * Cria um veículo com uma placa aleatória.
+     *
+     * @return Um novo veículo com placa aleatória.
+     */
     private static Veiculo criarVeiculo() {
         return new Veiculo(gerarPlacaAleatoria());
     }
 
     /**
-     * Método privado para gerar uma placa de veículo aleatória.
+     * Gera uma placa de veículo aleatória.
      *
-     * @return Uma placa de veículo aleatória gerada.
+     * @return Uma placa de veículo aleatória.
      */
     private static String gerarPlacaAleatoria() {
         Random random = new Random();
         StringBuilder placa = new StringBuilder();
 
-        
+        // Gera três letras aleatórias
         for (int i = 0; i < 3; i++) {
             char randomChar = (char) (random.nextInt(26) + 'A');
             placa.append(randomChar);
         }
 
-       
+        // Gera quatro dígitos aleatórios
         for (int i = 0; i < 4; i++) {
             int randomDigit = random.nextInt(10);
             placa.append(randomDigit);

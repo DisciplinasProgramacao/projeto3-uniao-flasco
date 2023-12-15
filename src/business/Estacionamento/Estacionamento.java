@@ -122,8 +122,10 @@ public class Estacionamento implements Serializable {
      * @param cliente O cliente a ser adicionado.
      */
     public void addCliente(Cliente cliente) {
-        if (cliente != null) {
+        if (!clienteExiste(cliente.getId())) {
             clientes.add(cliente);
+        } else {
+            System.out.println("Cliente com ID " + cliente.getId() + " já existe.");
         }
     }
 
