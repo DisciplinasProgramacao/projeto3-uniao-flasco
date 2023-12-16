@@ -2,7 +2,9 @@
 
 - Contribuições e tarefas em aula
 - Tarefas nas aulas ao longo do projeto: 5 pontos;
-
+- 04/10 (Henry, Maria Eduarda, Pedro Araújo, Pedro Henrique, Renato)
+- 11/10 (Henry, Maria Eduarda, Pedro Araújo, Pedro Henrique, Renato)
+- 18/10 (Henry, Maria Eduarda, Pedro Araújo, Renato)
 
 - Requisitos : 7,5/12 pontos;
 - Documentação: 2,5/3 pontos;
