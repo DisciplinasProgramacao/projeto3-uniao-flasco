@@ -8,6 +8,10 @@
   - Documentação: 2,75/3 pontos;
   - Tarefas nas aulas: 5 pontos;
   - Atraso nos artefatos: desconto de 1 a 4 pontos por semana.
+  - 01/11: Maria Eduarda, Pedro Araújo, Renato
+  - 08/11: Maria Eduarda, Pedro Araújo, Pedro Henrique, Renato
+  - 15/11: Henry, Maria Eduarda, Pedro Araújo, Renato
+
 
 ## Requisitos
 
